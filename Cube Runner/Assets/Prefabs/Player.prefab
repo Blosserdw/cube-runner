@@ -198,6 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 8
   direction: {x: 0, y: 0, z: 0}
+  stopMovement: 0
 --- !u!124 &12405458
 Behaviour:
   m_ObjectHideFlags: 1
