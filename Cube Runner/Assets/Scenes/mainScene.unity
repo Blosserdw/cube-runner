@@ -121,6 +121,7 @@ MonoBehaviour:
   playerStartPosition: {x: 0, y: .300000012, z: 4}
   cubeMovementTime: 2
   cubeTransformTime: 4
+  transformableTiles: []
 --- !u!4 &726907888
 Transform:
   m_ObjectHideFlags: 0

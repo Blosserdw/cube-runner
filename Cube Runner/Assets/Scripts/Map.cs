@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Map : MonoBehaviour {
 
@@ -50,6 +51,7 @@ public class Map : MonoBehaviour {
 				newTile.transform.parent = this.gameObject.transform;
 				newTile.layer = 8; // Ground layer for A*
 				Tiles[i, j] = newTile;
+				transformableTiles.Add(Tiles[i, j]);
 			}
 		}
 
@@ -77,22 +79,25 @@ public class Map : MonoBehaviour {
 
 	public float cubeMovementTime = 2.0f;
 	public float cubeTransformTime = 4.0f;
+	public List<GameObject> transformableTiles = new List<GameObject>();
 
 	public void StartCubeTransformations()
 	{
 		// Choose the cube to transform
-		int randomX = Random.Range(0, numTilesX);
-		int randomZ = Random.Range(0, numTilesZ);
+		GameObject randomTile = transformableTiles[Random.Range(0, transformableTiles.Count)];
+		// Then remove it from the list so it can't get chosen again
+		transformableTiles.Remove(randomTile);
+
 		bool cubeGoingUp;
 		if (Random.value >= 0.5f)
 			cubeGoingUp = true;
 		else
 			cubeGoingUp = false;
 
-		//Debug.Log("Going to move Cube " + randomX + ", " + randomZ + " " + cubeGoingUp);
 		// Start to blink this tile
-		Tiles[randomX, randomZ].GetComponentInChildren<Animation>().Play("tileColorBlink");
-		StartCoroutine(ActivateTransformation(Tiles[randomX, randomZ], cubeGoingUp));
+		randomTile.GetComponentInChildren<Animation>().Play("tileColorBlink");
+		StartCoroutine(ActivateTransformation(randomTile, cubeGoingUp));
+
 	}
 
 	public IEnumerator ActivateTransformation(GameObject thisTile, bool cubeIsGoingUp)
@@ -114,19 +119,25 @@ public class Map : MonoBehaviour {
 		Invoke("StartCubeTransformations", 1.0f);
 	}
 
-	public IEnumerator ReturnCubeToDefaultPosition(GameObject thisTile, bool cubeIsGoingUp)
+	public IEnumerator ReturnCubeToDefaultPosition(GameObject thisTile, bool cubeWentUp)
 	{
 		yield return new WaitForSeconds(cubeTransformTime);
 
 		Vector3 destination = new Vector3(thisTile.transform.position.x, 0f, thisTile.transform.position.z);
-		if (cubeIsGoingUp)
+		if (cubeWentUp)
+		{
 			destination = new Vector3(thisTile.transform.position.x, -1.0f, thisTile.transform.position.z);
+			iTween.MoveTo(thisTile, destination, cubeMovementTime);
+			StartCoroutine(ResetTileStatus(thisTile));
+		}
 		else
-			destination = new Vector3(thisTile.transform.position.x, 1.0f, thisTile.transform.position.z);
+		{
+			//destination = new Vector3(thisTile.transform.position.x, 1.0f, thisTile.transform.position.z);
+		}
 		
-		iTween.MoveTo(thisTile, destination, cubeMovementTime);
 
-		StartCoroutine(ResetTileStatus(thisTile));
+
+
 
 	}
 
@@ -136,6 +147,8 @@ public class Map : MonoBehaviour {
 
 		// Tile is done moving, reset it's status
 		thisTile.GetComponent<Tile>().isTransforming = false;
+		// Add it back to the list for tiles available for transformation
+		transformableTiles.Add(thisTile);
 	}
 }
 
