@@ -21,6 +21,9 @@ public class PlayerMovement : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
+		// Initialize variable, why is it saving???...
+		stopMovement = false;
+
 		// Grab the rigidbody
 		mRigidBody = GetComponent<Rigidbody>();
 
