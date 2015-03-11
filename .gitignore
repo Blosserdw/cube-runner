@@ -17,3 +17,6 @@
 sysinfo.txt
 *.csproj
 *.sln
+
+#Custom entries
+*.userprefs
