@@ -82,18 +82,18 @@ public class Map : MonoBehaviour {
 		//GameManager.Instance.SetUpPlayer(newPlayer, this);
 
 		// Start the environment changes after the player has been running around for a bit
-		Invoke("StartCubeTransformations", 3.0f);
+		Invoke("StartCubeTransformations", 2.0f);
 	}
 
 	public float cubeMovementTime = 2.0f;
 	public float cubeTransformTime = 4.0f;
 	public List<GameObject> transformableTiles = new List<GameObject>();
-	private bool foundTile = false;
 
 	public void StartCubeTransformations()
 	{
 		// Choose the cube to transform
 		GameObject randomStartTile = transformableTiles[Random.Range(0, transformableTiles.Count)];
+		Debug.Log("Random Starting tile for this group is: Tile(" + randomStartTile.transform.position.x + "," + randomStartTile.transform.position.z + ")");
 		int tilesToCheck = 0;
 
 		// Is this cube transformation going up or down?
@@ -105,7 +105,9 @@ public class Map : MonoBehaviour {
 
 		// Which cube transformation is it?
 		CubePattern thisPattern = (CubePattern)Random.Range(0, (int)CubePattern.Triple + 1);
+		Debug.Log("Going to try Block Pattern: " + thisPattern.ToString());
 
+		Debug.Log("Setting up new tile group list...");
 		List<GameObject> tileGroup = new List<GameObject>();
 
 		// Grab all the cubes connected in the pattern
@@ -117,6 +119,7 @@ public class Map : MonoBehaviour {
 
 			// Add to the group that will get transformed
 			tileGroup.Add(randomStartTile);
+			Debug.Log("Adding Tile(" + randomStartTile.transform.position.x + "," + randomStartTile.transform.position.z + ") to the group. Should be initial random tile. IN SINGLE LOGIC");
 			tilesToCheck = 1;
 
 			// Start to blink this tile
@@ -135,6 +138,7 @@ public class Map : MonoBehaviour {
 
 			// Add to transforming tile group
 			tileGroup.Add(randomStartTile);
+			Debug.Log("Adding Tile(" + randomStartTile.transform.position.x + "," + randomStartTile.transform.position.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
 			tilesToCheck = 1;
 
 			// Find the other tile in this configuration
@@ -145,24 +149,26 @@ public class Map : MonoBehaviour {
 			else
 				checkUpDown = false;
 
-			foundTile = false;
 			// Check the direction for another cube
 			if (checkUpDown)
 			{
+				Debug.Log("Trying to add Up/Down");
 				// See if there's one above/below this cube that isn't transformed at the moment
 				if (CheckUpDownFirst(randomStartTile) != null)
 				{
 					tileGroup.Add(CheckUpDownFirst(randomStartTile));
+					Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.position.x + "," + CheckUpDownFirst(randomStartTile).transform.position.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
 					tilesToCheck++;
 				}
-
 			}
 			else // Check Left/Right for another cube
 			{
+				Debug.Log("Trying to add Left/Right");
 				// See if there's one to the left/right of this cube that isn't transformed at the moment
 				if (CheckLeftRightFirst(randomStartTile) != null)
 				{
 					tileGroup.Add(CheckLeftRightFirst(randomStartTile));
+					Debug.Log("Adding Second Tile(" + CheckLeftRightFirst(randomStartTile).transform.position.x + "," + CheckLeftRightFirst(randomStartTile).transform.position.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
 					tilesToCheck++;
 				}
 			}
@@ -177,6 +183,7 @@ public class Map : MonoBehaviour {
 			
 			// Add to transforming tile group
 			tileGroup.Add(randomStartTile);
+			Debug.Log("Adding Tile(" + randomStartTile.transform.position.x + "," + randomStartTile.transform.position.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
 			tilesToCheck = 1;
 			
 			// Find the other tile in this configuration
@@ -186,8 +193,7 @@ public class Map : MonoBehaviour {
 				checkUpDown = true;
 			else
 				checkUpDown = false;
-			
-			foundTile = false;
+
 			// Check the direction for another cube
 			if (checkUpDown)
 			{
@@ -196,7 +202,13 @@ public class Map : MonoBehaviour {
 					if (CheckUpDownFirst(tileGroup[i]) != null)
 					{
 						tileGroup.Add(CheckUpDownFirst(tileGroup[i]));
+						Debug.Log("Adding + " + i + "Tile(" + CheckUpDownFirst(tileGroup[i]).transform.position.x + "," + CheckUpDownFirst(tileGroup[i]).transform.position.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
 						tilesToCheck++;
+					}
+					else
+					{
+						Debug.LogWarning("Breaking out of the up/down for loop because number " + i + " in the tile group will be null");
+						break;
 					}
 				}
 			}
@@ -208,7 +220,13 @@ public class Map : MonoBehaviour {
 					if (CheckLeftRightFirst(tileGroup[i]) != null)
 					{
 						tileGroup.Add(CheckLeftRightFirst(tileGroup[i]));
+						Debug.Log("Adding + " + i + "Tile(" + CheckLeftRightFirst(tileGroup[i]).transform.position.x + "," + CheckLeftRightFirst(tileGroup[i]).transform.position.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
 						tilesToCheck++;
+					}
+					else
+					{
+						Debug.LogWarning("Breaking out of the left/right for loop because number " + i + " in the tile group will be null");
+						break;
 					}
 				}
 			}
@@ -225,12 +243,13 @@ public class Map : MonoBehaviour {
 		Debug.Log("But the tiles to check count is: " + tilesToCheck);
 		for (int i = 0; i < tilesToCheck; i++)
 		{
-			Debug.Log("Tile" + i + " is: " + tileGroup[i]);
+			Debug.Log("Tile" + i + " is at: " + tileGroup[i].transform.position.x + "," + tileGroup[i].transform.position.z + ")");
 
 			// Start to blink this tile
 			tileGroup[i].GetComponentInChildren<Animation>().Play("tileColorBlink");
 
 			// Then remove it from the list so it can't get chosen again in the meantime
+			Debug.Log("Removing this tile from the transformables. Tile(" + tileGroup[i].transform.position.x + "," + tileGroup[i].transform.position.z + ")");
 			transformableTiles.Remove(tileGroup[i]);
 		}
 
@@ -289,6 +308,7 @@ public class Map : MonoBehaviour {
 		// Tile is done moving, reset it's status
 		thisTile.GetComponent<Tile>().isTransforming = false;
 		// Add it back to the list for tiles available for transformation
+		Debug.Log("Adding this tile back to the transformables. Tile(" + thisTile.transform.position.x + "," + thisTile.transform.position.z + ")");
 		transformableTiles.Add(thisTile);
 	}
 
@@ -298,36 +318,31 @@ public class Map : MonoBehaviour {
 		    && !Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
 		{
 			// One is above
-			foundTile = true;
 			return(Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z]);
 		}
 		else if ((int)fromThisTile.transform.position.x - 1 >= 0
 		         && !Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
 		{
 			// One is below
-			foundTile = true;
 			return(Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z]);
 		}
-		
-		if (!foundTile)
+
+		// If we didn't find one above or below, check left/right
+		// See if there's one to the left/right of this cube that isn't transformed at the moment
+		if ((int)fromThisTile.transform.position.z - 1 >= 0
+		    && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1].GetComponent<Tile>().isTransforming)
 		{
-			// If we didn't find one above or below, check left/right
-			// See if there's one to the left/right of this cube that isn't transformed at the moment
-			if ((int)fromThisTile.transform.position.z - 1 >= 0
-			    && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1].GetComponent<Tile>().isTransforming)
-			{
-				// One is left
-				foundTile = true;
-				return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1]);
-			}
-			else if ((int)fromThisTile.transform.position.z + 1 <= 9
-			         && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1].GetComponent<Tile>().isTransforming)
-			{
-				// One is right
-				foundTile = true;
-				return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1]);
-			}
+			// One is left
+			return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1]);
 		}
+		else if ((int)fromThisTile.transform.position.z + 1 <= 9
+		         && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1].GetComponent<Tile>().isTransforming)
+		{
+			// One is right
+			return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1]);
+		}
+
+		Debug.Log("Going to guess we didn't find one in left/right either");
 
 		return null;
 	}
@@ -338,36 +353,31 @@ public class Map : MonoBehaviour {
 		    && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1].GetComponent<Tile>().isTransforming)
 		{
 			// One is left
-			foundTile = true;
 			return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z - 1]);
 		}
 		else if ((int)fromThisTile.transform.position.z + 1 <= 9
 		         && !Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1].GetComponent<Tile>().isTransforming)
 		{
 			// One is right
-			foundTile = true;
 			return(Tiles[(int)fromThisTile.transform.position.x, (int)fromThisTile.transform.position.z + 1]);
 		}
-		
-		if (!foundTile)
+
+		// If we didn't find one left or right, check up/down
+		// See if there's one above/below this cube that isn't transformed at the moment
+		if ((int)fromThisTile.transform.position.x + 1 <= 9
+		    && !Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
 		{
-			// If we didn't find one left or right, check up/down
-			// See if there's one above/below this cube that isn't transformed at the moment
-			if ((int)fromThisTile.transform.position.x + 1 <= 9
-			    && !Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
-			{
-				// One is above
-				foundTile = true;
-				return(Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z]);
-			}
-			else if ((int)fromThisTile.transform.position.x - 1 >= 0
-			         && !Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
-			{
-				// One is below
-				foundTile = true;
-				return(Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z]);
-			}
+			// One is above
+			return(Tiles[(int)fromThisTile.transform.position.x + 1, (int)fromThisTile.transform.position.z]);
 		}
+		else if ((int)fromThisTile.transform.position.x - 1 >= 0
+		         && !Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z].GetComponent<Tile>().isTransforming)
+		{
+			// One is below
+			return(Tiles[(int)fromThisTile.transform.position.x - 1, (int)fromThisTile.transform.position.z]);
+		}
+
+		Debug.Log("Going to guess we didn't find one in up/down either");
 
 		return null;
 	}
