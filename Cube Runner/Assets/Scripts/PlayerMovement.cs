@@ -15,8 +15,13 @@ public class PlayerMovement : MonoBehaviour {
 	public Vector3 direction = new Vector3(0f, 0f, 0f);
 
 	private Rigidbody mRigidBody = null;
+	public SphereCollider mySphereCollider = null;
 
 	public bool stopMovement = false;
+	public bool isTransferring = false;
+	private bool transferred = false;
+
+	public TransferDirection transferThisDirection;
 
 	// Use this for initialization
 	void Start ()
@@ -36,11 +41,11 @@ public class PlayerMovement : MonoBehaviour {
 	{
 
 		//=MOVEMENT CONTROLS WITH WASD====================================================||
-		// Move right
 		if (GameManager.Instance.currentMap != null)
 		{
-			if (!stopMovement)
+			if (!isTransferring)
 			{
+				GameManager.Instance.playerObject.GetComponent<Rigidbody>().useGravity = true;
 				// Move Right
 				if (Input.GetKeyDown(KeyCode.D))
 				{
@@ -80,27 +85,35 @@ public class PlayerMovement : MonoBehaviour {
 
 
 				// X Check, make sure we don't go off the edge (MIGHT be used later for cube side transferring
-				if (transform.position.x >= 9.2f)
+				if (transform.position.x >= 5.0f)
 				{
-					direction.x = -speed;
-					direction.z = 0.0f;
+					//direction.x = -speed;
+					//direction.z = 0.0f;
+					isTransferring = true;
+					transferThisDirection = TransferDirection.Front;
 				}
-				else if (transform.position.x <= -0.2f)
+				else if (transform.position.x <= -5.0f)
 				{
-					direction.x = speed;
-					direction.z = 0.0f;
+					//direction.x = speed;
+					//direction.z = 0.0f;
+					isTransferring = true;
+					transferThisDirection = TransferDirection.Back;
 				}
 				
 				// Z Check
-				if (transform.position.z >= 9.2f)
+				if (transform.position.z >= 5.0f)
 				{
-					direction.z = -speed;
-					direction.x = 0.0f;
+					//direction.z = -speed;
+					//direction.x = 0.0f;
+					isTransferring = true;
+					transferThisDirection = TransferDirection.Left;
 				}
-				else if (transform.position.z <= -0.2f)
+				else if (transform.position.z <= -5.0f)
 				{
-					direction.z = speed;
-					direction.x = 0.0f;
+					//direction.z = speed;
+					//direction.x = 0.0f;
+					isTransferring = true;
+					transferThisDirection = TransferDirection.Right;
 				}
 				
 				// After determining direction, move the player
@@ -109,14 +122,37 @@ public class PlayerMovement : MonoBehaviour {
 			}
 			else
 			{
-				gameObject.GetComponent<CharacterController>().enabled = false;
-				gameObject.GetComponentInChildren<SphereCollider>().enabled = false;
-
-				// Movement is stopped
-				direction.x = 0.0f;
-				direction.z = 0.0f;
-				mRigidBody.velocity = direction;
+				if (!transferred)
+				{
+					transferred = true;
+					gameObject.GetComponent<CharacterController>().enabled = false;
+					gameObject.GetComponentInChildren<SphereCollider>().enabled = false;
+					GameManager.Instance.playerObject.GetComponent<Rigidbody>().useGravity = false;
+					
+					//Debug.Log("STOOOOOOPPPP!!!!");
+					
+					// Movement is stopped
+					direction.x = 0.0f;
+					direction.y = 0.0f;
+					direction.z = 0.0f;
+					mRigidBody.velocity = direction;
+					
+					mySphereCollider.enabled = false;
+					
+					GameManager.Instance.ProcessTransfer(transferThisDirection);
+				}
 			}
 		}
+	}
+
+	public void RestartPlayer()
+	{
+		Debug.Log("RESTARTING PLAYER!!");
+
+		direction.x = speed;
+		direction.z = 0.0f;
+		mySphereCollider.enabled = true;
+		isTransferring = false;
+		transferred = false;
 	}
 }
