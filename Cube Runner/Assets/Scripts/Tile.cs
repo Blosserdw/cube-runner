@@ -32,7 +32,7 @@ public class Tile : MonoBehaviour {
 			{
 				// This cube is sunken
 				Debug.Log("Entered trigger of SUNKEN tile " + transform.position.x + ", " + transform.position.z);
-				GameManager.Instance.playerObject.GetComponent<PlayerMovement>().stopMovement = true;
+				//GameManager.Instance.playerObject.GetComponent<PlayerMovement>().stopMovement = true;
 			}
 		}
 	}

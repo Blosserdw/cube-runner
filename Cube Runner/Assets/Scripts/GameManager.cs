@@ -1,6 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum CubePattern
+{
+	Single,
+	Double,
+	Triple,
+	FourSquare
+}
+
 public class GameManager : MonoBehaviour {
 
 	private static GameManager instance = null;
@@ -49,15 +57,35 @@ public class GameManager : MonoBehaviour {
 		{
 			
 		}
+
+		if (Input.GetKeyDown(KeyCode.R))
+		{
+			Debug.Log("GETTING INPUT");
+			mapLeftContainer.transform.position = Vector3.zero;
+			mapLeftContainer.transform.rotation = Quaternion.identity;
+		}
 	}
 	
 	public GameObject playerObject = null;
+	public GameObject playerPrefab = null;
 	public Map currentMap = null;
-	//public GameObject aStarObject = null;
+	public GameObject mapTopContainer = null;
+	public GameObject mapBottomContainer = null;
+	public GameObject mapLeftContainer = null;
+	public GameObject mapRightContainer = null;
+	public GameObject mapFrontContainer = null;
+	public GameObject mapBackContainer = null;
+	public Vector3 playerStartPosition = new Vector3(0.0f, 0.0f, 4.0f);
 	
-	public void SetUpPlayer(GameObject thisPlayerObject, Map thisMap)
+	public void SetUpPlayer(Map thisMap)
 	{
-		playerObject = thisPlayerObject;
-		currentMap = thisMap;
+		if (thisMap == mapTopContainer.GetComponentInChildren<Map>())
+		{
+			GameObject newPlayer = GameObject.Instantiate(playerPrefab, Vector3.zero, Quaternion.identity) as GameObject;
+			newPlayer.transform.position = thisMap.Tiles[0,0].transform.position + playerStartPosition;
+
+			playerObject = newPlayer;
+			currentMap = thisMap;
+		}
 	}
 }
