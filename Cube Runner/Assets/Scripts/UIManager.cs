@@ -26,13 +26,47 @@ public class UIManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		LoadHUD();
+		LoadMainMenu();
+
+		// Grab the rotating cube
+		if (GameObject.Find("RotatingCube") != null)
+		{
+			MainMenuCube = GameObject.Find("RotatingCube");
+		}
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
 		
+	}
+
+	public GameObject MainMenuPrefab = null;
+	public GameObject MainMenuObject = null;
+	public MainMenu MainMenuScript = null;
+	public GameObject MainMenuCube = null;
+	
+	public void LoadMainMenu()
+	{
+		// Load the main menu UI
+		MainMenuObject = GameObject.Instantiate(MainMenuPrefab) as GameObject;
+		MainMenuScript = (MainMenu)MainMenuObject.GetComponent<MainMenu>() as MainMenu;
+	}
+	
+	public void DestroyMainMenu()
+	{
+		if (MainMenuObject != null)
+		{
+			if (MainMenuCube != null)
+			{
+				Destroy(MainMenuCube);
+				MainMenuCube = null;
+			}
+
+			Destroy (MainMenuObject);
+			MainMenuObject = null;
+			MainMenuScript = null;
+		}
 	}
 
 	public GameObject HUDPrefab = null;
@@ -42,7 +76,7 @@ public class UIManager : MonoBehaviour {
 	public void LoadHUD()
 	{
 		// Load the main menu UI
-		HUDObject = GameObject.Instantiate(Resources.Load("Prefabs/HUD")) as GameObject;
+		HUDObject = GameObject.Instantiate(HUDPrefab) as GameObject;
 		HUDScript = (UIHUD_Events)HUDObject.GetComponent<UIHUD_Events>() as UIHUD_Events;
 	}
 
@@ -53,6 +87,14 @@ public class UIManager : MonoBehaviour {
 			Destroy (HUDObject);
 			HUDObject = null;
 			HUDScript = null;
+		}
+	}
+
+	public void AddToScore(int numToAdd)
+	{
+		if (HUDScript != null)
+		{
+			HUDScript.AddThisToScore(numToAdd);
 		}
 	}
 }

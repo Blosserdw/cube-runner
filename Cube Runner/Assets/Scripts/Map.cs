@@ -10,7 +10,6 @@ public class Map : MonoBehaviour {
 	public int numTilesX = 10;
 	public int numTilesZ = 10;
 	public GameObject tilePrefab;
-	public int amountOfPickups = 3;
 
 	// Use this for initialization
 	void Start ()
@@ -59,7 +58,7 @@ public class Map : MonoBehaviour {
 			}
 		}
 
-		GeneratePickups(amountOfPickups);
+		GeneratePickups(GameManager.Instance.pickupsPerSide);
 		
 		// Set the map to the right rotation (should already be set in the inspector, so 0,0,0 SHOULD work here for everything
 		////Debug.Log("Setting Map: " + this.gameObject.name + " to 0,0,0");
@@ -80,7 +79,7 @@ public class Map : MonoBehaviour {
 	{
 		List<int> numsAlreadyChosen = new List<int>();
 
-		for (int i = 0; i < amountOfPickups; i++)
+		for (int i = 0; i < GameManager.Instance.pickupsPerSide; i++)
 		{
 			// Pick random placement for this pickup
 			int randomX = Random.Range(1, numTilesX - 1); // Adding minus 1 and starting at 1 so they're not near the edges

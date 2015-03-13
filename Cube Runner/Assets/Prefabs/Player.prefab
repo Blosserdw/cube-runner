@@ -197,7 +197,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 107070}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: -1.62920685e-07}
-  m_LocalPosition: {x: 0, y: -2.46499991, z: 0}
+  m_LocalPosition: {x: 0, y: -2.46000004, z: .239999995}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 432804}
@@ -236,7 +236,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 114286}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: .250461102, y: -.661263466, z: .250461072, w: -.661263347}
   m_LocalPosition: {x: 0, y: 3.01755714, z: 0}
   m_LocalScale: {x: 1, y: .937444031, z: 1}
   m_Children: []
@@ -261,7 +261,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 114728}
-  m_LocalRotation: {x: -.00072288001, y: .00190855085, z: -.354204774, w: .935165703}
+  m_LocalRotation: {x: .250461102, y: -.661263466, z: .250461072, w: -.661263347}
   m_LocalPosition: {x: .148526847, y: 2.46893001, z: .000317582482}
   m_LocalScale: {x: .99999994, y: 1, z: 1}
   m_Children:
@@ -274,7 +274,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167044}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: .250461102, y: -.661263466, z: .250461072, w: -.661263347}
   m_LocalPosition: {x: -.0834444836, y: 2.87900853, z: .000389282213}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -286,7 +286,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 175178}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: .250461102, y: -.661263466, z: .250461072, w: -.661263347}
   m_LocalPosition: {x: -.105393991, y: 3.35029769, z: .000712642679}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -415,6 +415,7 @@ MonoBehaviour:
   speed: 8
   direction: {x: 0, y: 0, z: 0}
   mySphereCollider: {fileID: 13594612}
+  playerArtObject: {fileID: 107070}
   stopMovement: 1
   isTransferring: 0
   transferThisDirection: 0

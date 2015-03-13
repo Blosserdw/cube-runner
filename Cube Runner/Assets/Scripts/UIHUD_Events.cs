@@ -4,28 +4,21 @@ using UnityEngine.UI;
 
 public class UIHUD_Events : MonoBehaviour {
 
-	public CanvasGroup fadeCanvasGroup; // Because text field alphas don't animate well? What?
-	public GameObject turnLabel;
+	private int score = 0;
+	public Text scoreText = null;
 
 	// Use this for initialization
 	void Start ()
 	{
-		// Make turn label invisible at the start of the game
+		// Initialize score label
+		scoreText.text = "0 / " + (GameManager.Instance.pickupsPerSide * 6).ToString();
 	}
 
-	public void FadeInTurnText(string turnEntity)
+	public void AddThisToScore(int numToAdd)
 	{
-		turnLabel.GetComponent<Text>().text = turnEntity + "'s Turn...";
-		fadeCanvasGroup.gameObject.GetComponent<Animation>().Play("canvasFadeIn");
-
-		StartCoroutine(FadeOutTurnText(turnEntity));
+		score += numToAdd;
+		scoreText.text = score.ToString() + " / " + (GameManager.Instance.pickupsPerSide * 6).ToString();
 	}
 
-	public IEnumerator FadeOutTurnText(string turnEntity)
-	{
-		yield return new WaitForSeconds(3.0f);
 
-		turnLabel.GetComponent<Text>().text = turnEntity + "'s Turn...";
-		fadeCanvasGroup.gameObject.GetComponent<Animation>().Play("canvasFadeOut");
-	}
 }

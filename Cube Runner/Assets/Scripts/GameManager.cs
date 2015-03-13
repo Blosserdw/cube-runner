@@ -80,6 +80,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject mapRightContainer = null;
 	public GameObject mapFrontContainer = null;
 	public GameObject mapBackContainer = null;
+	public int pickupsPerSide = 3;
 
 	private TransferDirection newMoveDirection;
 
@@ -111,10 +112,6 @@ public class GameManager : MonoBehaviour {
 
 		// Set up new move hash for player object to transfer sides with
 		moveHash = new Hashtable();
-		moveHash.Add("y", 6.0f);
-		moveHash.Add("time", 1.0f);
-		moveHash.Add("oncomplete", "FinishedPlacingPlayer");
-		moveHash.Add("oncompletetarget", gameObject);
 		newMoveDirection = thisDirection;
 
 		// Make sure the rotator object starts out at no rotation
@@ -191,9 +188,19 @@ public class GameManager : MonoBehaviour {
 			rotateHash.Add("oncompletetarget", gameObject);
 
 			iTween.RotateBy(rotator, rotateHash);
-
+			playerObject.transform.position = new Vector3(playerObject.transform.position.x, playerObject.transform.position.y + 4.5f, playerObject.transform.position.z);
+			Invoke("MovePlayerOnTransfer", 0.0f);
 			currentMap = mapTopContainer.GetComponentInChildren<Map>();
 		}
+	}
+
+	public void MovePlayerOnTransfer()
+	{
+		moveHash.Add("y", 6.0f);
+		moveHash.Add("time", 1.1f);
+		moveHash.Add("oncomplete", "FinishedPlacingPlayer");
+		moveHash.Add("oncompletetarget", gameObject);
+		iTween.MoveTo(playerObject, moveHash);
 	}
 
 	public void FinishedRotating()
@@ -202,8 +209,6 @@ public class GameManager : MonoBehaviour {
 
 		// Unparent
 		masterCube.transform.parent = null;
-
-		iTween.MoveTo(playerObject, moveHash);
 	}
 
 	public void FinishedPlacingPlayer()

@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Rigidbody mRigidBody = null;
 	public SphereCollider mySphereCollider = null;
+	public GameObject playerArtObject = null;
 
 	public bool stopMovement = false;
 	public bool isTransferring = false;
@@ -39,6 +40,8 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
+
+		// Rotation of the player
 
 		//=MOVEMENT CONTROLS WITH WASD====================================================||
 		if (GameManager.Instance.currentMap != null)
@@ -82,7 +85,8 @@ public class PlayerMovement : MonoBehaviour {
 					direction.z = 0.0f;
 				}
 
-
+				// Rotate the player to face the right direction
+				playerArtObject.transform.forward = direction;
 
 				// X Check, make sure we don't go off the edge (MIGHT be used later for cube side transferring
 				if (transform.position.x >= 5.0f)
