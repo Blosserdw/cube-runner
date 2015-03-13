@@ -145,12 +145,31 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	public void RestartPlayer()
+	public void RestartPlayer(TransferDirection thisDirection)
 	{
 		Debug.Log("RESTARTING PLAYER!!");
 
-		direction.x = speed;
-		direction.z = 0.0f;
+		if (thisDirection == TransferDirection.Front)
+		{
+			direction.x = speed;
+			direction.z = 0.0f;
+		}
+		else if (thisDirection == TransferDirection.Back)
+		{
+			direction.x = -speed;
+			direction.z = 0.0f;
+		}
+		else if (thisDirection == TransferDirection.Left)
+		{
+			direction.z = speed;
+			direction.x = 0.0f;
+		}
+		else
+		{
+			direction.z = -speed;
+			direction.x = 0.0f;
+		}
+
 		mySphereCollider.enabled = true;
 		isTransferring = false;
 		transferred = false;

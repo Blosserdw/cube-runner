@@ -70,14 +70,20 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject playerObject = null;
 	public GameObject playerPrefab = null;
+	public GameObject pickupPrefab = null;
 	public Map currentMap = null;
 	public GameObject masterCube = null;
+	public GameObject rotator = null;
 	public GameObject mapTopContainer = null;
 	public GameObject mapBottomContainer = null;
 	public GameObject mapLeftContainer = null;
 	public GameObject mapRightContainer = null;
 	public GameObject mapFrontContainer = null;
 	public GameObject mapBackContainer = null;
+
+	private TransferDirection newMoveDirection;
+
+	private Hashtable moveHash;
 
 	// maps
 	public GameObject frontTransferMapTop = null;
@@ -100,6 +106,23 @@ public class GameManager : MonoBehaviour {
 
 	public void ProcessTransfer(TransferDirection thisDirection)
 	{
+		// Deactivate old map top
+		currentMap.DeactivateMap(0.0f);
+
+		// Set up new move hash for player object to transfer sides with
+		moveHash = new Hashtable();
+		moveHash.Add("y", 6.0f);
+		moveHash.Add("time", 1.0f);
+		moveHash.Add("oncomplete", "FinishedPlacingPlayer");
+		moveHash.Add("oncompletetarget", gameObject);
+		newMoveDirection = thisDirection;
+
+		// Make sure the rotator object starts out at no rotation
+		rotator.transform.position = Vector3.zero;
+		rotator.transform.rotation = Quaternion.identity;
+
+		masterCube.transform.parent = rotator.transform;
+
 		if (thisDirection != null)
 		{
 			Hashtable rotateHash = new Hashtable();
@@ -115,6 +138,7 @@ public class GameManager : MonoBehaviour {
 				// other two sides stay the same
 				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z + 90.0f));
 				rotateHash.Add("z", 0.25f);
+				moveHash.Add("x", -4.5f);
 			}
 			else if (thisDirection == TransferDirection.Back)
 			{
@@ -127,6 +151,7 @@ public class GameManager : MonoBehaviour {
 				// other two sides stay the same
 				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z - 90.0f));
 				rotateHash.Add("z", -0.25f);
+				moveHash.Add("x", 4.5f);
 			}
 			else if (thisDirection == TransferDirection.Left)
 			{
@@ -139,6 +164,7 @@ public class GameManager : MonoBehaviour {
 				// other two sides stay the same
 				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x - 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
 				rotateHash.Add("x", -0.25f);
+				moveHash.Add("z", -4.5f);
 			}
 			else if (thisDirection == TransferDirection.Right)
 			{
@@ -151,6 +177,7 @@ public class GameManager : MonoBehaviour {
 				// other two sides stay the same
 				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x + 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
 				rotateHash.Add("x", 0.25f);
+				moveHash.Add("z", 4.5f);
 			}
 			else
 			{
@@ -163,10 +190,9 @@ public class GameManager : MonoBehaviour {
 			rotateHash.Add("oncomplete", "FinishedRotating");
 			rotateHash.Add("oncompletetarget", gameObject);
 
-			iTween.RotateBy(masterCube, rotateHash);
+			iTween.RotateBy(rotator, rotateHash);
 
 			currentMap = mapTopContainer.GetComponentInChildren<Map>();
-			//currentMap.ActivateMap();
 		}
 	}
 
@@ -174,11 +200,8 @@ public class GameManager : MonoBehaviour {
 	{
 		Debug.Log("ROTATING DONE!!");
 
-		Hashtable moveHash = new Hashtable();
-		moveHash.Add("position", playerStartPosition);
-		moveHash.Add("time", 1.0f);
-		moveHash.Add("oncomplete", "FinishedPlacingPlayer");
-		moveHash.Add("oncompletetarget", gameObject);
+		// Unparent
+		masterCube.transform.parent = null;
 
 		iTween.MoveTo(playerObject, moveHash);
 	}
@@ -186,6 +209,7 @@ public class GameManager : MonoBehaviour {
 	public void FinishedPlacingPlayer()
 	{
 		Debug.Log("PLAYER MOVING DONE!!");
-		playerObject.GetComponent<PlayerMovement>().RestartPlayer();
+		playerObject.GetComponent<PlayerMovement>().RestartPlayer(newMoveDirection);
+		currentMap.ActivateMap(0.0f);
 	}
 }
