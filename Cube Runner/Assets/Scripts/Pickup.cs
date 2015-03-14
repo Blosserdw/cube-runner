@@ -12,6 +12,8 @@ public class Pickup : MonoBehaviour {
 	void Start ()
 	{
 		myCollider = gameObject.GetComponent<BoxCollider>();
+		pickupArtObject.GetComponent<Animation>()["pickupBob"].time = Random.Range(0.0f, 1.0f);
+		pickupArtObject.GetComponent<Animation>().Play("pickupBob");
 	}
 	
 	// Update is called once per frame

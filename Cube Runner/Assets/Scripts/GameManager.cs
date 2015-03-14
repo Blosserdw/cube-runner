@@ -42,15 +42,8 @@ public class GameManager : MonoBehaviour {
 	// Use this for initialization
 	void Start ()
 	{
-		//gameObject.AddComponent<UIManager>(); // Set up the UIManager
-		checkMoveFinished = false;
+
 	}
-	
-	// Movement variables
-	public bool checkMoveFinished = false;
-	public float moveTime = 0.5f;
-	public float tileStep = 1.0f;
-	public GameObject selectedTile = null;
 
 	// Update is called once per frame
 	void Update ()
@@ -67,6 +60,8 @@ public class GameManager : MonoBehaviour {
 			mapLeftContainer.transform.rotation = Quaternion.identity;
 		}
 	}
+
+	public bool gameIsResetting = false;
 	
 	public GameObject playerObject = null;
 	public GameObject playerPrefab = null;
@@ -86,11 +81,19 @@ public class GameManager : MonoBehaviour {
 
 	private Hashtable moveHash;
 
-	// maps
-	public GameObject frontTransferMapTop = null;
-
 	private Vector3 playerStartPosition = new Vector3(-4.5f, 6.0f, -0.5f);
-	
+
+	public void SetupMap()
+	{
+		// Generate the maps manually now
+		mapTopContainer.GetComponentInChildren<Map>().GenerateMap();
+		mapBottomContainer.GetComponentInChildren<Map>().GenerateMap();
+		mapFrontContainer.GetComponentInChildren<Map>().GenerateMap();
+		mapBackContainer.GetComponentInChildren<Map>().GenerateMap();
+		mapLeftContainer.GetComponentInChildren<Map>().GenerateMap();
+		mapRightContainer.GetComponentInChildren<Map>().GenerateMap();
+	}
+
 	public void SetUpPlayer(Map thisMap)
 	{
 		if (thisMap == mapTopContainer.GetComponentInChildren<Map>())
@@ -103,6 +106,12 @@ public class GameManager : MonoBehaviour {
 
 			currentMap.ActivateMap(2.0f);
 		}
+	}
+
+	public void SinkPlayer(bool shouldSink)
+	{
+		if (playerObject != null)
+			playerObject.GetComponent<PlayerMovement>().sinkPlayer = shouldSink;
 	}
 
 	public void ProcessTransfer(TransferDirection thisDirection)
@@ -216,5 +225,89 @@ public class GameManager : MonoBehaviour {
 		Debug.Log("PLAYER MOVING DONE!!");
 		playerObject.GetComponent<PlayerMovement>().RestartPlayer(newMoveDirection);
 		currentMap.ActivateMap(0.0f);
+	}
+
+	public void GameOver()
+	{
+		currentMap.DeactivateMap(0.0f);
+		gameIsResetting = true;
+		Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
+		Invoke("RestartLevel", 3.0f);
+	}
+
+	public void RestartLevel()
+	{
+		// Remove all the tiles and pickups so we can generate again
+		mapTopContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapTopContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapTopContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		mapBottomContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapBottomContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapBottomContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		mapFrontContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapFrontContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapFrontContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		mapBackContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapBackContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapBackContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		mapLeftContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapLeftContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapLeftContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		mapRightContainer.GetComponentInChildren<Map>().StopAllCoroutines();
+		foreach (Pickup thisPickup in mapRightContainer.GetComponentsInChildren<Pickup>())
+		{
+			Destroy(thisPickup.gameObject);
+		}
+		foreach (Tile thisTile in mapRightContainer.GetComponentsInChildren<Tile>())
+		{
+			Destroy(thisTile.gameObject);
+		}
+
+		Destroy(playerObject);
+
+		StartLevel();
+	}
+
+	public void StartLevel()
+	{
+		gameIsResetting = false;
+		UIManager.Instance.HUDScript.ResetScore();
+		Debug.Log("GAME IS RESETTING IS FALSE, BACK TO WORK");
+		SetupMap();
 	}
 }

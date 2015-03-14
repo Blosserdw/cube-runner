@@ -1,11 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tile : MonoBehaviour {
-
-	public GameObject artObject = null;
-	public bool isTransforming = false;
-	public bool hasPickupOnIt = false;
+public class MenuCube : MonoBehaviour {
 
 	// Use this for initialization
 	void Start ()
@@ -17,5 +13,11 @@ public class Tile : MonoBehaviour {
 	void Update ()
 	{
 		
+	}
+
+	public void ChangeMenu()
+	{
+		Debug.Log("ANIMATION EVENT HIT");
+		UIManager.Instance.SwitchMenu();
 	}
 }

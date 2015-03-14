@@ -146,7 +146,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -249,7 +248,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -308,7 +306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!108 &979030806
 Light:
   m_ObjectHideFlags: 0
@@ -396,7 +394,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -443,7 +440,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -455,6 +451,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 1214372332}
+  - 114: {fileID: 1214372333}
   - 114: {fileID: 1214372331}
   m_Layer: 0
   m_Name: _SCRIPTS
@@ -469,15 +466,12 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1214372330}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07bcd2642b26fc54a9b41b516f6b2f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  checkMoveFinished: 0
-  moveTime: .5
-  tileStep: 1
-  selectedTile: {fileID: 0}
+  gameIsResetting: 0
   playerObject: {fileID: 105454, guid: cb5b62c8030ec4349b5019eb99715c29, type: 2}
   playerPrefab: {fileID: 105454, guid: cb5b62c8030ec4349b5019eb99715c29, type: 2}
   pickupPrefab: {fileID: 150102, guid: 45782b589a4572940b6be77632113f92, type: 2}
@@ -490,7 +484,7 @@ MonoBehaviour:
   mapRightContainer: {fileID: 1871820594}
   mapFrontContainer: {fileID: 861526138}
   mapBackContainer: {fileID: 558788948}
-  frontTransferMapTop: {fileID: 0}
+  pickupsPerSide: 3
 --- !u!4 &1214372332
 Transform:
   m_ObjectHideFlags: 0
@@ -503,6 +497,141 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1214372333
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1214372330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21497e8fb2e741d43a0346622299054c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MainMenuPrefab: {fileID: 165862, guid: 6ce220651fbc62f48b565d3d4417599b, type: 2}
+  MainMenuObject: {fileID: 0}
+  MainMenuScript: {fileID: 0}
+  MainMenuCube: {fileID: 0}
+  switchTo: 1
+  HUDPrefab: {fileID: 141904, guid: 3c3034b34d0cb824893a0af153bc8d06, type: 2}
+  HUDObject: {fileID: 0}
+  HUDScript: {fileID: 0}
+--- !u!1 &1389666251
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1389666256}
+  - 33: {fileID: 1389666255}
+  - 65: {fileID: 1389666254}
+  - 23: {fileID: 1389666253}
+  - 114: {fileID: 1389666252}
+  - 111: {fileID: 1389666258}
+  - 114: {fileID: 1389666257}
+  m_Layer: 0
+  m_Name: RotatingCube
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1389666252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1654c7044c85aa243b284bc8f3f1b4b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotateXSpeed: 1
+  rotateYSpeed: 1.5
+  rotateZSpeed: .5
+--- !u!23 &1389666253
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 1
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+--- !u!65 &1389666254
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!33 &1389666255
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1389666256
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_LocalRotation: {x: 0, y: .258819073, z: 0, w: .965925813}
+  m_LocalPosition: {x: -4.35091496, y: 1, z: 1.40348804}
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+--- !u!114 &1389666257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7fe92066bc273845b1dd7a6066e0c35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!111 &1389666258
+Animation:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1389666251}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 04ef967d49948154bb8298aeb3254b2f, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &1641599820
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +675,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -593,7 +721,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  amountOfPickups: 3
   cubeMovementTime: 2
   cubeTransformTime: 4
   transformableTiles: []
@@ -712,4 +839,4 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4

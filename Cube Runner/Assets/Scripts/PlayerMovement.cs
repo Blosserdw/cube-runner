@@ -24,6 +24,10 @@ public class PlayerMovement : MonoBehaviour {
 
 	public TransferDirection transferThisDirection;
 
+	public bool sinkPlayer = false;
+
+	private bool gameOver = false;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -44,7 +48,7 @@ public class PlayerMovement : MonoBehaviour {
 		// Rotation of the player
 
 		//=MOVEMENT CONTROLS WITH WASD====================================================||
-		if (GameManager.Instance.currentMap != null)
+		if (GameManager.Instance.currentMap != null && !gameOver)
 		{
 			if (!isTransferring)
 			{
@@ -122,7 +126,26 @@ public class PlayerMovement : MonoBehaviour {
 				
 				// After determining direction, move the player
 				//mRigidBody.AddForce(direction); // Too slow with momentum
+
+				if (!sinkPlayer)
+				{
+					//Debug.Log("NOT SINKING");
+					direction.y = 0.0f;
+				}
+				else
+				{
+					//Debug.Log("SINKING");
+					direction.y = mRigidBody.velocity.y;
+				}
+
 				mRigidBody.velocity = direction;
+
+				if (transform.position.y < 5.3f)
+				{
+					Debug.Log("LOST GAME!!!");
+					gameOver = true;
+					GameManager.Instance.GameOver();
+				}
 			}
 			else
 			{
@@ -177,5 +200,43 @@ public class PlayerMovement : MonoBehaviour {
 		mySphereCollider.enabled = true;
 		isTransferring = false;
 		transferred = false;
+	}
+
+	public void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.GetComponent<Tile>() != null && other.gameObject.GetComponent<Tile>().isTransforming)
+		{
+			// Determine where the cube is (Up or Down)
+			if (other.gameObject.transform.localPosition.y > 0.0f)
+			{
+				// This cube is raised
+				Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+			}
+			else if (other.gameObject.transform.localPosition.y < 0.0f)
+			{
+				// This cube is sunken
+				Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				GameManager.Instance.SinkPlayer(true);
+			}
+		}
+	}
+	
+	public void OnTriggerExit(Collider other)
+	{
+		if (other.gameObject.GetComponent<Tile>() != null && other.gameObject.GetComponent<Tile>().isTransforming)
+		{
+			// Determine where the cube is (Up or Down)
+			if (other.gameObject.transform.localPosition.y > 0.0f)
+			{
+				// This cube is raised
+				Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+			}
+			else if (other.gameObject.transform.localPosition.y < 0.0f)
+			{
+				// This cube is sunken
+				Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				GameManager.Instance.SinkPlayer(false);
+			}
+		}
 	}
 }

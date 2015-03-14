@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum ScreenSwitch
+{
+	Title,
+	Credits,
+	Game
+}
+
 public class UIManager : MonoBehaviour {
 
 	private static UIManager instance = null;
@@ -45,12 +52,15 @@ public class UIManager : MonoBehaviour {
 	public GameObject MainMenuObject = null;
 	public MainMenu MainMenuScript = null;
 	public GameObject MainMenuCube = null;
+	public ScreenSwitch switchTo = ScreenSwitch.Credits;
 	
 	public void LoadMainMenu()
 	{
 		// Load the main menu UI
 		MainMenuObject = GameObject.Instantiate(MainMenuPrefab) as GameObject;
 		MainMenuScript = (MainMenu)MainMenuObject.GetComponent<MainMenu>() as MainMenu;
+
+
 	}
 	
 	public void DestroyMainMenu()
@@ -66,6 +76,33 @@ public class UIManager : MonoBehaviour {
 			Destroy (MainMenuObject);
 			MainMenuObject = null;
 			MainMenuScript = null;
+		}
+	}
+
+	public void SwitchMenu()
+	{
+		if (switchTo == ScreenSwitch.Credits)
+		{
+			if (MainMenuScript != null)
+			{
+				MainMenuScript.ChangeMenuToCredits();
+			}
+		}
+		else if (switchTo == ScreenSwitch.Title)
+		{
+			if (MainMenuScript != null)
+			{
+				MainMenuScript.ChangeMenuToTitle();
+			}
+		}
+		else
+		{
+			if (MainMenuScript != null)
+			{
+				UIManager.Instance.DestroyMainMenu();
+				UIManager.Instance.LoadHUD();
+				GameManager.Instance.StartLevel();
+			}
 		}
 	}
 
@@ -95,6 +132,20 @@ public class UIManager : MonoBehaviour {
 		if (HUDScript != null)
 		{
 			HUDScript.AddThisToScore(numToAdd);
+		}
+	}
+
+	public void CheckScore(int scoreToCheck)
+	{
+		if (scoreToCheck >= GameManager.Instance.pickupsPerSide * 6)
+		{
+			Debug.Log("YOU WIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			// Level over, start transitioning to next with faster rates
+
+		}
+		else
+		{
+			Debug.Log("Checking score... but nothing out of the ordinary... move along...");
 		}
 	}
 }

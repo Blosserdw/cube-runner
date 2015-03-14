@@ -16,7 +16,7 @@ public class Map : MonoBehaviour {
 	{
 		Tiles = new GameObject[numTilesX, numTilesZ];
 		
-		GenerateMap();
+		//GenerateMap();
 	}
 	
 	// Update is called once per frame
@@ -27,6 +27,9 @@ public class Map : MonoBehaviour {
 	
 	public void GenerateMap()
 	{
+		Tiles = new GameObject[numTilesX, numTilesZ];
+		transformableTiles.Clear();
+
 		for (int i = 0; i < numTilesX; i++)
 		{
 			for (int j = 0; j < numTilesZ; j++)
@@ -125,12 +128,16 @@ public class Map : MonoBehaviour {
 
 	public void StartCubeTransformations()
 	{
-		if (canThisMapTransform)
+		if (canThisMapTransform && !GameManager.Instance.gameIsResetting)
 		{
 			//Debug.Log("Started transformations on map: " + this.gameObject.name + "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
 			// Choose the cube to transform
 			GameObject randomStartTile = transformableTiles[Random.Range(0, transformableTiles.Count)];
+//			for (int i = 0; i < transformableTiles.Count; i++)
+//			{
+//				Debug.Log("Transformable Tile" + i + " is: (" + transformableTiles[i].transform.localPosition.x + "," + transformableTiles[i].transform.localPosition.z + ")");
+//			}
 			//Debug.Log("How many transformable tiles do we have for " + this.gameObject.name + "? Well, it's: " + transformableTiles.Count);
 			//Debug.Log("Random Starting tile for this group is: Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") on Map:" + this.gameObject.name);
 			int tilesToCheck = 0;
@@ -143,12 +150,13 @@ public class Map : MonoBehaviour {
 				cubeGoingUp = false;
 
 			// Which cube transformation is it?
-			CubePattern thisPattern = (CubePattern)Random.Range(0, (int)CubePattern.Triple + 1);
+			CubePattern thisPattern = (CubePattern)Random.Range(0, (int)CubePattern.FourSquare + 1);
 			//Debug.Log("Going to try Block Pattern: " + thisPattern.ToString());
 
 			//Debug.Log("Setting up new tile group list...");
 			List<GameObject> tileGroup = new List<GameObject>();
 
+			thisPattern = CubePattern.FourSquare;
 			// Grab all the cubes connected in the pattern
 			if (thisPattern == CubePattern.Single)
 			{
@@ -191,24 +199,30 @@ public class Map : MonoBehaviour {
 				// Check the direction for another cube
 				if (checkUpDown)
 				{
-					//Debug.Log("Trying to add Up/Down");
-					// See if there's one above/below this cube that isn't transformed at the moment
-					if (CheckUpDownFirst(randomStartTile) != null && CheckUpDownFirst(randomStartTile) != randomStartTile)
+					if (CheckUpDownAndGiveMeCube(randomStartTile) != null)
 					{
-						tileGroup.Add(CheckUpDownFirst(randomStartTile));
+						tileGroup.Add(CheckUpForValidCube(randomStartTile));
 						//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
 						tilesToCheck++;
+					}
+					else
+					{
+						Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one...");
 					}
 				}
 				else // Check Left/Right for another cube
 				{
 					//Debug.Log("Trying to add Left/Right");
 					// See if there's one to the left/right of this cube that isn't transformed at the moment
-					if (CheckLeftRightFirst(randomStartTile) != null && CheckLeftRightFirst(randomStartTile) != randomStartTile)
+					if (CheckLeftRightAndGiveMeCube(randomStartTile) != null && CheckLeftRightAndGiveMeCube(randomStartTile) != randomStartTile)
 					{
-						tileGroup.Add(CheckLeftRightFirst(randomStartTile));
+						tileGroup.Add(CheckLeftRightAndGiveMeCube(randomStartTile));
 						//Debug.Log("Adding Second Tile(" + CheckLeftRightFirst(randomStartTile).transform.localPosition.x + "," + CheckLeftRightFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
 						tilesToCheck++;
+					}
+					else
+					{
+						//Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one... ");
 					}
 				}
 
@@ -236,41 +250,95 @@ public class Map : MonoBehaviour {
 				// Check the direction for another cube
 				if (checkUpDown)
 				{
-					for (int i = 0; i < (int)CubePattern.Triple; i++)
+					for (int i = 0; i < (int)thisPattern; i++)
 					{
-						if (CheckUpDownFirst(tileGroup[i]) != null && CheckUpDownFirst(tileGroup[i]) != tileGroup[i])
+						if (tileGroup[i] != null && CheckUpDownAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckUpDownAndGiveMeCube(tileGroup[i])))
 						{
-							tileGroup.Add(CheckUpDownFirst(tileGroup[i]));
-							//Debug.Log("Adding + " + i + "Tile(" + CheckUpDownFirst(tileGroup[i]).transform.localPosition.x + "," + CheckUpDownFirst(tileGroup[i]).transform.localPosition.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
+							tileGroup.Add(CheckUpForValidCube(tileGroup[i]));
+							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT intial tile. IN DOUBLE LOGIC");
 							tilesToCheck++;
 						}
 						else
 						{
-							//Debug.LogWarning("Breaking out of the up/down for loop because number " + i + " in the tile group will be null");
+							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
 							break;
 						}
 					}
 				}
 				else // Check Left/Right for another cube
 				{
-					// See if there's one to the left/right of this cube that isn't transformed at the moment
-					for (int i = 0; i < (int)CubePattern.Triple; i++)
+					for (int i = 0; i < (int)thisPattern; i++)
 					{
-						if (CheckLeftRightFirst(tileGroup[i]) != null && CheckLeftRightFirst(tileGroup[i]) != tileGroup[i])
+						if (tileGroup[i] != null && CheckLeftRightAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckLeftRightAndGiveMeCube(tileGroup[i])))
 						{
-							tileGroup.Add(CheckLeftRightFirst(tileGroup[i]));
-							//Debug.Log("Adding + " + i + "Tile(" + CheckLeftRightFirst(tileGroup[i]).transform.localPosition.x + "," + CheckLeftRightFirst(tileGroup[i]).transform.localPosition.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
+							tileGroup.Add(CheckLeftRightAndGiveMeCube(tileGroup[i]));
+							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT initial tile. IN DOUBLE LOGIC");
 							tilesToCheck++;
 						}
 						else
 						{
-							//Debug.LogWarning("Breaking out of the left/right for loop because number " + i + " in the tile group will be null");
+							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
 							break;
 						}
 					}
 				}
 
 				//Debug.Log("transformed a TRIPLE tile");
+			}
+			else if (thisPattern == CubePattern.FourSquare)
+			{
+				//===============================||
+				// FOURSQUARE CUBES
+				//===============================||
+
+				// Add to transforming tile group
+				tileGroup.Add(randomStartTile);
+				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN FOURSQUARE LOGIC");
+				tilesToCheck = 1;
+				
+				// Find the other tile in this configuration
+				// Choose Up/Down or Left/Right to check first
+				bool checkUpDown;
+				if (Random.value >= 0.5f)
+					checkUpDown = true;
+				else
+					checkUpDown = false;
+
+				for (int i = 0; i < (int)thisPattern; i++)
+				{
+					checkUpDown = !checkUpDown;
+					// Check the direction for the next cube
+					if (checkUpDown)
+					{
+						if (tileGroup[i] != null && CheckUpDownAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckUpDownAndGiveMeCube(tileGroup[i])))
+						{
+							tileGroup.Add(CheckUpDownAndGiveMeCube(tileGroup[i]));
+							//Debug.Log("Adding " + i + " Tile(" + CheckUpDownAndGiveMeCube(tileGroup[i]).transform.localPosition.x + "," + CheckUpDownAndGiveMeCube(tileGroup[i]).transform.localPosition.z + ") to the group. NOT initial tile. IN FOURSQUARE LOGIC");
+							tilesToCheck++;
+						}
+						else
+						{
+							//Debug.Log(i + " Tile was not added in FOURSQUARE logic because we couldn't find one... UPDOWN LOGIC");
+							break;
+						}
+					}
+					else // Check Left/Right for another cube
+					{
+						if (tileGroup[i] != null && CheckLeftRightAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckLeftRightAndGiveMeCube(tileGroup[i])))
+						{
+							tileGroup.Add(CheckLeftRightAndGiveMeCube(tileGroup[i]));
+							//Debug.Log("Adding " + i + " Tile(" + CheckLeftRightAndGiveMeCube(tileGroup[i]).transform.localPosition.x + "," + CheckLeftRightAndGiveMeCube(tileGroup[i]).transform.localPosition.z + ") to the group. NOT initial tile. IN FOURSQUARE LOGIC");
+							tilesToCheck++;
+						}
+						else
+						{
+							//Debug.Log(i + " Tile was not added in FOURSQUARE logic because we couldn't find one... LEFTRIGHT LOGIC");
+							break;
+						}
+					}
+				}
+
+				//Debug.Log("transformed a FourSquare tile");
 			}
 			else
 			{
@@ -292,6 +360,11 @@ public class Map : MonoBehaviour {
 				transformableTiles.Remove(tileGroup[i]);
 			}
 
+//			for (int i = 0; i < transformableTiles.Count; i++)
+//			{
+//				Debug.Log("After removals, Transformable Tile" + i + " is: (" + transformableTiles[i].transform.localPosition.x + "," + transformableTiles[i].transform.localPosition.z + ")");
+//			}
+
 			StartCoroutine(ActivateTransformation(tileGroup, cubeGoingUp));
 		}
 	}
@@ -300,52 +373,30 @@ public class Map : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(0.8f);
 
-		for (int i = 0; i < tileGroup.Count; i++)
+		if (!GameManager.Instance.gameIsResetting)
 		{
-			tileGroup[i].GetComponent<Tile>().isTransforming = true;
-
-			Vector3 destination;
-			if (cubeIsGoingUp)
+			for (int i = 0; i < tileGroup.Count; i++)
 			{
-				destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y + 1.0f, tileGroup[i].transform.localPosition.z);
+				//Debug.Log("Tile " + i + " in this group is transforming already?: " + tileGroup[i].GetComponent<Tile>().isTransforming);
+				if (tileGroup[i].GetComponent<Tile>().isTransforming)
+				{
+					//Debug.LogError("HEP HOOOOOOOO!!!!");
+				}
+				tileGroup[i].GetComponent<Tile>().isTransforming = true;
+
+				Vector3 destination;
+				if (cubeIsGoingUp)
+				{
+					destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y + 1.0f, tileGroup[i].transform.localPosition.z);
+					//Debug.Log("Moving Tile:" + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + " to local Y position:" + (tileGroup[i].transform.localPosition.y + 1.0f));
+				}
+				else
+				{
+					destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y - 0.9f, tileGroup[i].transform.localPosition.z);
+					//Debug.Log("Moving Tile:" + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + " to local Y position:" + (tileGroup[i].transform.localPosition.y - 1.0f));
+				}
+
 				//Debug.Log("Moving Tile:" + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + " to local Y position:" + (tileGroup[i].transform.localPosition.y + 1.0f));
-			}
-			else
-			{
-				destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y - 1.0f, tileGroup[i].transform.localPosition.z);
-				//Debug.Log("Moving Tile:" + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + " to local Y position:" + (tileGroup[i].transform.localPosition.y - 1.0f));
-			}
-
-			//Debug.Log("Moving Tile:" + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + " to local Y position:" + (tileGroup[i].transform.localPosition.y + 1.0f));
-
-			// Set up Hashtable for move (NEED TO MAKE MOVEMENT IN LOCAL SPACE)
-			Hashtable moveHash = new Hashtable();
-			//moveHash.Add("easetype", "linear"); // Make movement smooth
-			moveHash.Add("position", destination);
-			moveHash.Add("time", cubeMovementTime);
-			moveHash.Add("delay", 0.0f);
-			moveHash.Add("isLocal", true);
-			//moveHash.Add("oncomplete", "MovePlayerToPosition");
-			//moveHash.Add("oncompletetarget", this.gameObject);
-
-			iTween.MoveTo(tileGroup[i], moveHash);
-			StartCoroutine(ReturnCubeToDefaultPosition(tileGroup, cubeIsGoingUp));
-		}
-
-		Invoke("StartCubeTransformations", 1.0f);
-	}
-
-	public IEnumerator ReturnCubeToDefaultPosition(List<GameObject> tileGroup, bool cubeWentUp)
-	{
-		yield return new WaitForSeconds(cubeTransformTime);
-
-		for (int i = 0; i < tileGroup.Count; i++)
-		{
-			Vector3 destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y, tileGroup[i].transform.localPosition.z);
-			if (cubeWentUp)
-			{
-				// Cubes that go up must come down
-				destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y - 1.0f, tileGroup[i].transform.localPosition.z);
 
 				// Set up Hashtable for move (NEED TO MAKE MOVEMENT IN LOCAL SPACE)
 				Hashtable moveHash = new Hashtable();
@@ -356,15 +407,49 @@ public class Map : MonoBehaviour {
 				moveHash.Add("isLocal", true);
 				//moveHash.Add("oncomplete", "MovePlayerToPosition");
 				//moveHash.Add("oncompletetarget", this.gameObject);
-				
-				iTween.MoveTo(tileGroup[i], moveHash);
 
-				StartCoroutine(ResetTileStatus(tileGroup[i]));
+				iTween.MoveTo(tileGroup[i], moveHash);
+				StartCoroutine(ReturnCubeToDefaultPosition(tileGroup, cubeIsGoingUp));
 			}
-			else
+
+			Invoke("StartCubeTransformations", 1.0f);
+		}
+	}
+
+	public IEnumerator ReturnCubeToDefaultPosition(List<GameObject> tileGroup, bool cubeWentUp)
+	{
+		yield return new WaitForSeconds(cubeTransformTime);
+
+		if (!GameManager.Instance.gameIsResetting)
+		{
+			for (int i = 0; i < tileGroup.Count; i++)
 			{
-				// Cubes that go down never come back up
-				//destination = new Vector3(thisTile.transform.position.x, 1.0f, thisTile.transform.position.z);
+				//Debug.Log("Game is resetting variable when returning cube to default position is: " + GameManager.Instance.gameIsResetting);
+				Vector3 destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y, tileGroup[i].transform.localPosition.z);
+				if (cubeWentUp)
+				{
+					// Cubes that go up must come down
+					destination = new Vector3(tileGroup[i].transform.localPosition.x, tileGroup[i].transform.localPosition.y - 1.0f, tileGroup[i].transform.localPosition.z);
+
+					// Set up Hashtable for move (NEED TO MAKE MOVEMENT IN LOCAL SPACE)
+					Hashtable moveHash = new Hashtable();
+					//moveHash.Add("easetype", "linear"); // Make movement smooth
+					moveHash.Add("position", destination);
+					moveHash.Add("time", cubeMovementTime);
+					moveHash.Add("delay", 0.0f);
+					moveHash.Add("isLocal", true);
+					//moveHash.Add("oncomplete", "MovePlayerToPosition");
+					//moveHash.Add("oncompletetarget", this.gameObject);
+					
+					iTween.MoveTo(tileGroup[i], moveHash);
+
+					StartCoroutine(ResetTileStatus(tileGroup[i]));
+				}
+				else
+				{
+					// Cubes that go down never come back up
+					//destination = new Vector3(thisTile.transform.position.x, 1.0f, thisTile.transform.position.z);
+				}
 			}
 		}
 	}
@@ -373,14 +458,17 @@ public class Map : MonoBehaviour {
 	{
 		yield return new WaitForSeconds(cubeMovementTime);
 
-		// Tile is done moving, reset it's status
-		thisTile.GetComponent<Tile>().isTransforming = false;
-		// Add it back to the list for tiles available for transformation
-		//Debug.Log("Adding this tile back to the transformables. Tile(" + thisTile.transform.localPosition.x + "," + thisTile.transform.localPosition.z + ")");
-		transformableTiles.Add(thisTile);
+		if (!GameManager.Instance.gameIsResetting)
+		{
+			// Tile is done moving, reset it's status
+			thisTile.GetComponent<Tile>().isTransforming = false;
+			// Add it back to the list for tiles available for transformation
+			//Debug.Log("Adding this tile back to the transformables. Tile(" + thisTile.transform.localPosition.x + "," + thisTile.transform.localPosition.z + ")");
+			transformableTiles.Add(thisTile);
+		}
 	}
 
-	public GameObject CheckUpDownFirst(GameObject fromThisTile)
+	public GameObject CheckUpForValidCube(GameObject fromThisTile)
 	{
 		if ((int)fromThisTile.transform.localPosition.x + 1 <= 9
 		    && !Tiles[(int)fromThisTile.transform.localPosition.x + 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().isTransforming
@@ -389,37 +477,24 @@ public class Map : MonoBehaviour {
 			// One is above
 			return(Tiles[(int)fromThisTile.transform.localPosition.x + 1, (int)fromThisTile.transform.localPosition.z]);
 		}
-		else if ((int)fromThisTile.transform.localPosition.x - 1 >= 0
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().isTransforming
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().hasPickupOnIt)
-		{
-			// One is below
-			return(Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z]);
-		}
-
-		// If we didn't find one above or below, check left/right
-		// See if there's one to the left/right of this cube that isn't transformed at the moment
-		if ((int)fromThisTile.transform.localPosition.z - 1 >= 0
-		    && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z - 1].GetComponent<Tile>().isTransforming
-		    && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z - 1].GetComponent<Tile>().hasPickupOnIt)
-		{
-			// One is left
-			return(Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z - 1]);
-		}
-		else if ((int)fromThisTile.transform.localPosition.z + 1 <= 9
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().isTransforming
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().hasPickupOnIt)
-		{
-			// One is right
-			return(Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1]);
-		}
-
-		//Debug.Log("Going to guess we didn't find one in left/right either");
 
 		return null;
 	}
 
-	public GameObject CheckLeftRightFirst(GameObject fromThisTile)
+	public GameObject CheckDownForValidCube(GameObject fromThisTile)
+	{
+		if ((int)fromThisTile.transform.localPosition.x - 1 >= 0
+		    && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().isTransforming
+		    && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().hasPickupOnIt)
+		{
+			// One is below
+			return(Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z]);
+		}
+
+		return null;
+	}
+
+	public GameObject CheckLeftForValidCube(GameObject fromThisTile)
 	{
 		if ((int)fromThisTile.transform.localPosition.z - 1 >= 0
 		    && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z - 1].GetComponent<Tile>().isTransforming
@@ -428,33 +503,48 @@ public class Map : MonoBehaviour {
 			// One is left
 			return(Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z - 1]);
 		}
-		else if ((int)fromThisTile.transform.localPosition.z + 1 <= 9
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().isTransforming
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().hasPickupOnIt)
+
+		return null;
+	}
+
+	public GameObject CheckRightForValidCube(GameObject fromThisTile)
+	{
+		if ((int)fromThisTile.transform.localPosition.z + 1 <= 9
+		    && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().isTransforming
+		    && !Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1].GetComponent<Tile>().hasPickupOnIt)
 		{
 			// One is right
 			return(Tiles[(int)fromThisTile.transform.localPosition.x, (int)fromThisTile.transform.localPosition.z + 1]);
 		}
 
-		// If we didn't find one left or right, check up/down
-		// See if there's one above/below this cube that isn't transformed at the moment
-		if ((int)fromThisTile.transform.localPosition.x + 1 <= 9
-		    && !Tiles[(int)fromThisTile.transform.localPosition.x + 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().isTransforming
-		    && !Tiles[(int)fromThisTile.transform.localPosition.x + 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().hasPickupOnIt)
-		{
-			// One is above
-			return(Tiles[(int)fromThisTile.transform.localPosition.x + 1, (int)fromThisTile.transform.localPosition.z]);
-		}
-		else if ((int)fromThisTile.transform.localPosition.x - 1 >= 0
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().isTransforming
-		         && !Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z].GetComponent<Tile>().hasPickupOnIt)
-		{
-			// One is below
-			return(Tiles[(int)fromThisTile.transform.localPosition.x - 1, (int)fromThisTile.transform.localPosition.z]);
-		}
+		return null;
+	}
 
-		//Debug.Log("Going to guess we didn't find one in up/down either");
+	public GameObject CheckUpDownAndGiveMeCube(GameObject fromThisTile)
+	{
+		if (CheckUpForValidCube(fromThisTile) != null && CheckUpForValidCube(fromThisTile) != fromThisTile)
+			return (CheckUpForValidCube(fromThisTile));
+		else if (CheckDownForValidCube(fromThisTile) != null && CheckDownForValidCube(fromThisTile) != fromThisTile)
+			return (CheckDownForValidCube(fromThisTile));
+		else if (CheckLeftForValidCube(fromThisTile) != null && CheckLeftForValidCube(fromThisTile) != fromThisTile)
+			return (CheckLeftForValidCube(fromThisTile));
+		else if (CheckRightForValidCube(fromThisTile) != null && CheckRightForValidCube(fromThisTile) != fromThisTile)
+			return (CheckRightForValidCube(fromThisTile));
 
+		return null;
+	}
+
+	public GameObject CheckLeftRightAndGiveMeCube(GameObject fromThisTile)
+	{
+		if (CheckLeftForValidCube(fromThisTile) != null && CheckLeftForValidCube(fromThisTile) != fromThisTile)
+			return (CheckLeftForValidCube(fromThisTile));
+		else if (CheckRightForValidCube(fromThisTile) != null && CheckRightForValidCube(fromThisTile) != fromThisTile)
+			return (CheckRightForValidCube(fromThisTile));
+		else if (CheckUpForValidCube(fromThisTile) != null && CheckUpForValidCube(fromThisTile) != fromThisTile)
+			return (CheckUpForValidCube(fromThisTile));
+		else if (CheckDownForValidCube(fromThisTile) != null && CheckDownForValidCube(fromThisTile) != fromThisTile)
+			return (CheckDownForValidCube(fromThisTile));
+		
 		return null;
 	}
 }
