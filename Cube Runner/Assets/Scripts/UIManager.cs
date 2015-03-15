@@ -141,6 +141,7 @@ public class UIManager : MonoBehaviour {
 		{
 			Debug.Log("SCORE IS AT MAX");
 			// Level over, start transitioning to next with faster rates
+			GameManager.Instance.PlayLevelWinSound();
 			GameManager.Instance.NextLevel();
 			GameManager.Instance.playerObject.GetComponent<PlayerMovement>().stopMovement = true;
 		}
@@ -148,6 +149,34 @@ public class UIManager : MonoBehaviour {
 		{
 			//Debug.Log("Checking score... but nothing out of the ordinary... move along...");
 		}
+	}
+
+	public void ShowGameOverScreen()
+	{
+		if (HUDScript != null)
+		{
+			HUDScript.tryAgainScreen.SetActive(true);
+		}
+	}
+
+	public void StartGameOverSequence()
+	{
+		if (HUDScript != null)
+		{
+			GameManager.Instance.playerObject.GetComponent<Rigidbody>().useGravity = false;
+
+			Hashtable moveHash = new Hashtable();
+
+			moveHash.Add("position", GameManager.Instance.masterCube.transform.localPosition);
+			moveHash.Add("time", 10.0f);
+			moveHash.Add("isLocal", true);
+
+			Debug.Log("ASSIMILATING!!!");
+			GameManager.Instance.PlayGameOverSound();
+			iTween.MoveTo(GameManager.Instance.playerObject, moveHash);
+		}
+
+		Invoke("ShowGameOverScreen", 1.0f);
 	}
 
 	public GameObject LevelNumberPrefab = null;
