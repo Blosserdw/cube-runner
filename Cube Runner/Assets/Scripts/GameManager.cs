@@ -61,6 +61,12 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	public AudioClip pickup1Sound;
+	public AudioClip pickup2Sound;
+	public AudioClip pickup3Sound;
+	public AudioClip levelWinSound;
+	public AudioClip gameOverSound;
+
 	public bool gameIsResetting = false;
 	
 	public GameObject playerObject = null;
@@ -235,8 +241,8 @@ public class GameManager : MonoBehaviour {
 		levelNumber = 1;
 
 		// Disable player movement animation
-		playerObject.GetComponentInChildren<Animator>().StopPlayback();
-		playerObject.GetComponent<PlayerMovement>().myAnimator.SetBool("playerShouldMove", false);
+		//playerObject.GetComponentInChildren<Animator>().StopPlayback();
+		//playerObject.GetComponent<PlayerMovement>().myAnimator.SetBool("playerShouldMove", false);
 
 		// Will need to reset variables that are adding onto themselves in the maps
 		mapTopContainer.GetComponentInChildren<Map>().ResetVariables();
@@ -246,7 +252,7 @@ public class GameManager : MonoBehaviour {
 		mapLeftContainer.GetComponentInChildren<Map>().ResetVariables();
 		mapRightContainer.GetComponentInChildren<Map>().ResetVariables();
 
-		StartCoroutine(RemakeLevel());
+		StartCoroutine(RemakeLevel(0.0f));
 	}
 
 	public void NextLevel()
@@ -261,12 +267,12 @@ public class GameManager : MonoBehaviour {
 		gameIsResetting = true;
 		levelNumber++;
 		//Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
-		StartCoroutine(RemakeLevel());
+		StartCoroutine(RemakeLevel(3.0f));
 	}
 
-	public IEnumerator RemakeLevel()
+	public IEnumerator RemakeLevel(float delay)
 	{
-		yield return new WaitForSeconds(3.0f);
+		yield return new WaitForSeconds(delay);
 
 		// Remove all the tiles and pickups so we can generate again
 		mapTopContainer.GetComponentInChildren<Map>().StopAllCoroutines();
@@ -341,5 +347,38 @@ public class GameManager : MonoBehaviour {
 		UIManager.Instance.HUDScript.ResetScore();
 		//Debug.Log("GAME IS RESETTING IS FALSE, BACK TO WORK");
 		SetupMap();
+	}
+
+	public void PlayRandomPickupSound()
+	{
+		int selectNumber = Random.Range(0, 3);
+		
+		if (selectNumber == 0)
+		{
+			Debug.Log("Playing pickup 1 sound.");
+			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup1Sound);
+		}
+		else if (selectNumber == 1)
+		{
+			Debug.Log("Playing pickup 2 sound.");
+			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup2Sound);
+		}
+		else if (selectNumber == 2)
+		{
+			Debug.Log("Playing pickup 3 sound.");
+			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup3Sound);
+		}
+	}
+
+	public void PlayLevelWinSound()
+	{
+		Debug.Log("Playing level win sound.");
+		gameObject.GetComponent<AudioSource>().PlayOneShot(levelWinSound);
+	}
+
+	public void PlayGameOverSound()
+	{
+		Debug.Log("Playing game over sound.");
+		gameObject.GetComponent<AudioSource>().PlayOneShot(gameOverSound);
 	}
 }

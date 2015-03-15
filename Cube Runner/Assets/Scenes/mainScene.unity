@@ -15,15 +15,15 @@ RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 6
   m_Fog: 0
-  m_FogColor: {r: .5, g: .5, b: .5, a: 1}
-  m_FogMode: 3
-  m_FogDensity: .00999999978
+  m_FogColor: {r: .329411775, g: .329411775, b: .329411775, a: 1}
+  m_FogMode: 1
+  m_FogDensity: .689999998
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: .211999997, g: .226999998, b: .259000003, a: 1}
   m_AmbientEquatorColor: {r: .114, g: .125, b: .133000001, a: 1}
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: .75
   m_AmbientMode: 0
   m_SkyboxMaterial: {fileID: 2100000, guid: ba591509d40d920458a9ae7b828e23fd, type: 2}
   m_HaloStrength: .5
@@ -312,17 +312,17 @@ Light:
   m_Enabled: 1
   serializedVersion: 6
   m_Type: 1
-  m_Color: {r: 1, g: .956862748, b: .839215696, a: 1}
-  m_Intensity: .600000024
+  m_Color: {r: .819607854, g: 1, b: 1, a: 1}
+  m_Intensity: .779999971
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
-    m_Strength: 1
+    m_Strength: .760999978
     m_Bias: .0500000007
-    m_NormalBias: .400000006
+    m_NormalBias: .716000021
   m_Cookie: {fileID: 0}
   m_DrawHalo: 0
   m_Flare: {fileID: 0}
@@ -331,7 +331,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_Lightmapping: 4
-  m_BounceIntensity: 1
+  m_BounceIntensity: .689999998
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
@@ -341,8 +341,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 979030805}
-  m_LocalRotation: {x: .408217937, y: -.234569728, z: .109381676, w: .875426054}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: -.39961192, y: -.0985734388, z: .043270722, w: -.910341263}
+  m_LocalPosition: {x: 0, y: 18.1700001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -487,6 +487,7 @@ GameObject:
   - 4: {fileID: 1214372332}
   - 114: {fileID: 1214372333}
   - 114: {fileID: 1214372331}
+  - 82: {fileID: 1214372334}
   m_Layer: 0
   m_Name: _SCRIPTS
   m_TagString: Untagged
@@ -500,11 +501,16 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1214372330}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 07bcd2642b26fc54a9b41b516f6b2f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickup1Sound: {fileID: 8300000, guid: 2e92b4fb7e1562b43a8f4018b0ad25b6, type: 3}
+  pickup2Sound: {fileID: 8300000, guid: 7e882db0638acca4cac1b3a6659c2665, type: 3}
+  pickup3Sound: {fileID: 8300000, guid: bac50a1a0ef74a14cae58e1b96670357, type: 3}
+  levelWinSound: {fileID: 8300000, guid: c42747071b6bcb74e81cb2048dc3ebce, type: 3}
+  gameOverSound: {fileID: 8300000, guid: 4b2169dff75be5942911e8795d080867, type: 3}
   gameIsResetting: 0
   playerObject: {fileID: 105454, guid: cb5b62c8030ec4349b5019eb99715c29, type: 2}
   playerPrefab: {fileID: 105454, guid: cb5b62c8030ec4349b5019eb99715c29, type: 2}
@@ -554,6 +560,75 @@ MonoBehaviour:
   LevelNumberPrefab: {fileID: 105408, guid: 51ad22362b1e94641bc48e10815a75be, type: 2}
   LevelNumberObject: {fileID: 0}
   LevelNumberScript: {fileID: 0}
+--- !u!82 &1214372334
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1214372330}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: .600000024
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
 --- !u!1 &1389666251
 GameObject:
   m_ObjectHideFlags: 0

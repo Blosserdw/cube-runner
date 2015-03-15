@@ -25,6 +25,7 @@ public class Pickup : MonoBehaviour {
 	public void OnTriggerEnter()
 	{
 		myCollider.enabled = false; // So we don't hit it twice?
+		GameManager.Instance.PlayRandomPickupSound();
 		//Debug.Log("YOU GOT AN ITEM!!!! YAY!!");
 		pickupArtObject.SetActive(false);
 		UIManager.Instance.AddToScore(myWorth);

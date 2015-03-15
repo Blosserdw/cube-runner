@@ -146,7 +146,8 @@ public class PlayerMovement : MonoBehaviour {
 				{
 					Debug.Log("FELL!");
 					stopMovement = true;
-					GameManager.Instance.GameOver();
+					UIManager.Instance.StartGameOverSequence();
+					//GameManager.Instance.GameOver();
 				}
 			}
 			else
