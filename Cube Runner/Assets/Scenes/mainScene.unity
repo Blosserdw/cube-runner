@@ -318,9 +318,9 @@ Light:
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 1
     m_Resolution: -1
-    m_Strength: .760999978
+    m_Strength: .947000027
     m_Bias: .0500000007
     m_NormalBias: .716000021
   m_Cookie: {fileID: 0}
@@ -341,7 +341,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 979030805}
-  m_LocalRotation: {x: -.39961192, y: -.0985734388, z: .043270722, w: -.910341263}
+  m_LocalRotation: {x: .635727227, y: -.113228574, z: .095010072, w: .75763005}
   m_LocalPosition: {x: 0, y: 18.1700001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -506,7 +506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07bcd2642b26fc54a9b41b516f6b2f79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickup1Sound: {fileID: 8300000, guid: 2e92b4fb7e1562b43a8f4018b0ad25b6, type: 3}
   pickup2Sound: {fileID: 8300000, guid: 7e882db0638acca4cac1b3a6659c2665, type: 3}
   pickup3Sound: {fileID: 8300000, guid: bac50a1a0ef74a14cae58e1b96670357, type: 3}
   levelWinSound: {fileID: 8300000, guid: c42747071b6bcb74e81cb2048dc3ebce, type: 3}
@@ -675,7 +674,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: bbf331d7a625a164a88eb3050d497284, type: 2}
+  - {fileID: 2100000, guid: 2a36becac20153e43ae230f251bcab9d, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1

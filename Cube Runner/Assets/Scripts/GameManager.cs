@@ -60,8 +60,7 @@ public class GameManager : MonoBehaviour {
 			mapLeftContainer.transform.rotation = Quaternion.identity;
 		}
 	}
-
-	public AudioClip pickup1Sound;
+	
 	public AudioClip pickup2Sound;
 	public AudioClip pickup3Sound;
 	public AudioClip levelWinSound;
@@ -352,22 +351,17 @@ public class GameManager : MonoBehaviour {
 
 	public void PlayRandomPickupSound()
 	{
-		int selectNumber = Random.Range(0, 3);
+		int selectNumber = Random.Range(0, 2);
 		
 		if (selectNumber == 0)
 		{
-			Debug.Log("Playing pickup 1 sound.");
-			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup1Sound);
+			Debug.Log("Playing pickup 3 sound.");
+			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup3Sound);
 		}
 		else if (selectNumber == 1)
 		{
 			Debug.Log("Playing pickup 2 sound.");
 			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup2Sound);
-		}
-		else if (selectNumber == 2)
-		{
-			Debug.Log("Playing pickup 3 sound.");
-			gameObject.GetComponent<AudioSource>().PlayOneShot(pickup3Sound);
 		}
 	}
 
