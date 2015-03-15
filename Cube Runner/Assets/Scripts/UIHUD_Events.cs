@@ -33,6 +33,7 @@ public class UIHUD_Events : MonoBehaviour {
 
 	public void TryAgain()
 	{
+		GameManager.Instance.PlaySelectionSound();
 		tryAgainScreen.SetActive(false);
 		GameManager.Instance.GameOver();
 	}

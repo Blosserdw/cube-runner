@@ -66,6 +66,7 @@ public class GameManager : MonoBehaviour {
 	public AudioClip pickup3Sound;
 	public AudioClip levelWinSound;
 	public AudioClip gameOverSound;
+	public AudioClip selectionSound;
 
 	public bool gameIsResetting = false;
 	
@@ -380,5 +381,11 @@ public class GameManager : MonoBehaviour {
 	{
 		Debug.Log("Playing game over sound.");
 		gameObject.GetComponent<AudioSource>().PlayOneShot(gameOverSound);
+	}
+
+	public void PlaySelectionSound()
+	{
+		Debug.Log("Playing selection sound.");
+		gameObject.GetComponent<AudioSource>().PlayOneShot(selectionSound);
 	}
 }

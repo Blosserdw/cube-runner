@@ -26,6 +26,7 @@ public class MainMenu : MonoBehaviour {
 	{
 		Debug.Log("Starting level...");
 
+		GameManager.Instance.PlaySelectionSound();
 		UIManager.Instance.switchTo = ScreenSwitch.Game;
 
 		// Play menu cube animation to switch back
@@ -37,6 +38,7 @@ public class MainMenu : MonoBehaviour {
 		//Application.LoadLevel("mainScene");
 		Debug.Log("Displaying credits...");
 
+		GameManager.Instance.PlaySelectionSound();
 		UIManager.Instance.switchTo = ScreenSwitch.Credits;
 
 		// Play menu cube animation to switch to credits
@@ -45,6 +47,7 @@ public class MainMenu : MonoBehaviour {
 
 	public void OnBackFromCredits()
 	{
+		GameManager.Instance.PlaySelectionSound();
 		UIManager.Instance.switchTo = ScreenSwitch.Title;
 
 		// Play menu cube animation to switch back
