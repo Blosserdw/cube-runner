@@ -146,8 +146,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!4 &442436222
 Transform:
@@ -248,8 +246,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!4 &765273948
 Transform:
@@ -394,8 +390,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!1 &1139469508
 GameObject:
@@ -440,8 +434,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!1 &1214372330
 GameObject:
@@ -485,6 +477,7 @@ MonoBehaviour:
   mapFrontContainer: {fileID: 861526138}
   mapBackContainer: {fileID: 558788948}
   pickupsPerSide: 3
+  levelNumber: 1
 --- !u!4 &1214372332
 Transform:
   m_ObjectHideFlags: 0
@@ -516,6 +509,9 @@ MonoBehaviour:
   HUDPrefab: {fileID: 141904, guid: 3c3034b34d0cb824893a0af153bc8d06, type: 2}
   HUDObject: {fileID: 0}
   HUDScript: {fileID: 0}
+  LevelNumberPrefab: {fileID: 105408, guid: 51ad22362b1e94641bc48e10815a75be, type: 2}
+  LevelNumberObject: {fileID: 0}
+  LevelNumberScript: {fileID: 0}
 --- !u!1 &1389666251
 GameObject:
   m_ObjectHideFlags: 0
@@ -675,8 +671,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!1 &1791139222
 GameObject:
@@ -721,8 +715,6 @@ MonoBehaviour:
   numTilesX: 10
   numTilesZ: 10
   tilePrefab: {fileID: 164488, guid: 48614bfe24c341d4894d3bc2c6f1c613, type: 2}
-  cubeMovementTime: 2
-  cubeTransformTime: 4
   transformableTiles: []
 --- !u!1 &1834940750
 GameObject:

@@ -25,7 +25,7 @@ public class Pickup : MonoBehaviour {
 	public void OnTriggerEnter()
 	{
 		myCollider.enabled = false; // So we don't hit it twice?
-		Debug.Log("YOU GOT AN ITEM!!!! YAY!!");
+		//Debug.Log("YOU GOT AN ITEM!!!! YAY!!");
 		pickupArtObject.SetActive(false);
 		UIManager.Instance.AddToScore(myWorth);
 		myParticles.Play();

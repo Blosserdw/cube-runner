@@ -11,12 +11,18 @@ public class Map : MonoBehaviour {
 	public int numTilesZ = 10;
 	public GameObject tilePrefab;
 
+	private float cubeMovementTime = 2.0f;
+	private float cubeTransformTime = 4.0f;
+	private float timeBetweenTransformations = 1.0f;
+	private float warningTime = 0.8f;
+	private float warningAnimSpeed = 1.0f;
+	public List<GameObject> transformableTiles = new List<GameObject>();
+	private bool canThisMapTransform = false;
+
 	// Use this for initialization
 	void Start ()
 	{
 		Tiles = new GameObject[numTilesX, numTilesZ];
-		
-		//GenerateMap();
 	}
 	
 	// Update is called once per frame
@@ -24,11 +30,27 @@ public class Map : MonoBehaviour {
 	{
 		
 	}
+
+	public void ResetVariables()
+	{
+		cubeMovementTime = 2.0f;
+		cubeTransformTime = 4.0f;
+		timeBetweenTransformations = 1.0f;
+		warningTime = 0.8f;
+		warningAnimSpeed = 1.0f;
+	}
 	
 	public void GenerateMap()
 	{
 		Tiles = new GameObject[numTilesX, numTilesZ];
 		transformableTiles.Clear();
+
+		// Set up timing variables
+		cubeMovementTime /= GameManager.Instance.levelNumber;
+		cubeTransformTime /= GameManager.Instance.levelNumber;
+		timeBetweenTransformations /= GameManager.Instance.levelNumber;
+		warningTime /= GameManager.Instance.levelNumber;
+		warningAnimSpeed *= GameManager.Instance.levelNumber;
 
 		for (int i = 0; i < numTilesX; i++)
 		{
@@ -120,11 +142,6 @@ public class Map : MonoBehaviour {
 	{
 		canThisMapTransform = false;
 	}
-
-	public float cubeMovementTime = 2.0f;
-	public float cubeTransformTime = 4.0f;
-	public List<GameObject> transformableTiles = new List<GameObject>();
-	private bool canThisMapTransform = false;
 
 	public void StartCubeTransformations()
 	{
@@ -353,6 +370,7 @@ public class Map : MonoBehaviour {
 				//Debug.Log("Tile" + i + " is at: " + tileGroup[i].transform.localPosition.x + "," + tileGroup[i].transform.localPosition.z + ")");
 
 				// Start to blink this tile
+				tileGroup[i].GetComponentInChildren<Animation>()["tileColorBlink"].speed = warningAnimSpeed;
 				tileGroup[i].GetComponentInChildren<Animation>().Play("tileColorBlink");
 
 				// Then remove it from the list so it can't get chosen again in the meantime
@@ -371,7 +389,7 @@ public class Map : MonoBehaviour {
 
 	public IEnumerator ActivateTransformation(List<GameObject> tileGroup, bool cubeIsGoingUp)
 	{
-		yield return new WaitForSeconds(0.8f);
+		yield return new WaitForSeconds(warningTime);
 
 		if (!GameManager.Instance.gameIsResetting)
 		{
@@ -412,7 +430,7 @@ public class Map : MonoBehaviour {
 				StartCoroutine(ReturnCubeToDefaultPosition(tileGroup, cubeIsGoingUp));
 			}
 
-			Invoke("StartCubeTransformations", 1.0f);
+			Invoke("StartCubeTransformations", timeBetweenTransformations);
 		}
 	}
 

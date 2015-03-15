@@ -77,6 +77,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject mapBackContainer = null;
 	public int pickupsPerSide = 3;
 
+	public int levelNumber = 1;
+
 	private TransferDirection newMoveDirection;
 
 	private Hashtable moveHash;
@@ -229,14 +231,38 @@ public class GameManager : MonoBehaviour {
 
 	public void GameOver()
 	{
+		Debug.Log("GAME OVER");
+		StopAllCoroutines();
 		currentMap.DeactivateMap(0.0f);
 		gameIsResetting = true;
-		Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
-		Invoke("RestartLevel", 3.0f);
+		levelNumber = 1;
+		//Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
+
+		// Will need to reset variables that are adding onto themselves in the maps
+		mapTopContainer.GetComponentInChildren<Map>().ResetVariables();
+		mapBottomContainer.GetComponentInChildren<Map>().ResetVariables();
+		mapFrontContainer.GetComponentInChildren<Map>().ResetVariables();
+		mapBackContainer.GetComponentInChildren<Map>().ResetVariables();
+		mapLeftContainer.GetComponentInChildren<Map>().ResetVariables();
+		mapRightContainer.GetComponentInChildren<Map>().ResetVariables();
+
+		StartCoroutine(RemakeLevel());
 	}
 
-	public void RestartLevel()
+	public void NextLevel()
 	{
+		Debug.Log("BEAT LEVEL");
+		currentMap.DeactivateMap(0.0f);
+		gameIsResetting = true;
+		levelNumber++;
+		//Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
+		StartCoroutine(RemakeLevel());
+	}
+
+	public IEnumerator RemakeLevel()
+	{
+		yield return new WaitForSeconds(3.0f);
+
 		// Remove all the tiles and pickups so we can generate again
 		mapTopContainer.GetComponentInChildren<Map>().StopAllCoroutines();
 		foreach (Pickup thisPickup in mapTopContainer.GetComponentsInChildren<Pickup>())
@@ -305,6 +331,7 @@ public class GameManager : MonoBehaviour {
 
 	public void StartLevel()
 	{
+		UIManager.Instance.LoadLevelNumber();
 		gameIsResetting = false;
 		UIManager.Instance.HUDScript.ResetScore();
 		Debug.Log("GAME IS RESETTING IS FALSE, BACK TO WORK");

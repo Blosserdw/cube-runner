@@ -139,13 +139,35 @@ public class UIManager : MonoBehaviour {
 	{
 		if (scoreToCheck >= GameManager.Instance.pickupsPerSide * 6)
 		{
-			Debug.Log("YOU WIN ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+			Debug.Log("SCORE IS AT MAX");
 			// Level over, start transitioning to next with faster rates
-
+			GameManager.Instance.NextLevel();
+			GameManager.Instance.playerObject.GetComponent<PlayerMovement>().stopMovement = true;
 		}
 		else
 		{
 			Debug.Log("Checking score... but nothing out of the ordinary... move along...");
+		}
+	}
+
+	public GameObject LevelNumberPrefab = null;
+	public GameObject LevelNumberObject = null;
+	public UILevel LevelNumberScript = null;
+	
+	public void LoadLevelNumber()
+	{
+		// Load the main menu UI
+		LevelNumberObject = GameObject.Instantiate(LevelNumberPrefab) as GameObject;
+		LevelNumberScript = (UILevel)LevelNumberObject.GetComponent<UILevel>() as UILevel;
+	}
+	
+	public void DestroyLevelNumber()
+	{
+		if (LevelNumberObject != null)
+		{
+			Destroy (LevelNumberObject);
+			LevelNumberObject = null;
+			LevelNumberScript = null;
 		}
 	}
 }

@@ -26,8 +26,6 @@ public class PlayerMovement : MonoBehaviour {
 
 	public bool sinkPlayer = false;
 
-	private bool gameOver = false;
-
 	// Use this for initialization
 	void Start ()
 	{
@@ -48,7 +46,7 @@ public class PlayerMovement : MonoBehaviour {
 		// Rotation of the player
 
 		//=MOVEMENT CONTROLS WITH WASD====================================================||
-		if (GameManager.Instance.currentMap != null && !gameOver)
+		if (GameManager.Instance.currentMap != null && !stopMovement)
 		{
 			if (!isTransferring)
 			{
@@ -142,8 +140,8 @@ public class PlayerMovement : MonoBehaviour {
 
 				if (transform.position.y < 5.3f)
 				{
-					Debug.Log("LOST GAME!!!");
-					gameOver = true;
+					Debug.Log("FELL!");
+					stopMovement = true;
 					GameManager.Instance.GameOver();
 				}
 			}
