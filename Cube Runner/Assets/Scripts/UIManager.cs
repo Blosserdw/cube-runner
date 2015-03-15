@@ -146,7 +146,7 @@ public class UIManager : MonoBehaviour {
 		}
 		else
 		{
-			Debug.Log("Checking score... but nothing out of the ordinary... move along...");
+			//Debug.Log("Checking score... but nothing out of the ordinary... move along...");
 		}
 	}
 

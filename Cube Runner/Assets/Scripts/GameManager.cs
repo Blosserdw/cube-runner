@@ -131,84 +131,81 @@ public class GameManager : MonoBehaviour {
 
 		masterCube.transform.parent = rotator.transform;
 
-		if (thisDirection != null)
+		Hashtable rotateHash = new Hashtable();
+
+		if (thisDirection == TransferDirection.Front)
 		{
-			Hashtable rotateHash = new Hashtable();
+			GameObject tempMapHolder = mapTopContainer;
+			mapTopContainer = mapFrontContainer;
+			mapFrontContainer = mapBottomContainer;
+			mapBottomContainer = mapBackContainer;
+			mapBackContainer = tempMapHolder;
 
-			if (thisDirection == TransferDirection.Front)
-			{
-				GameObject tempMapHolder = mapTopContainer;
-				mapTopContainer = mapFrontContainer;
-				mapFrontContainer = mapBottomContainer;
-				mapBottomContainer = mapBackContainer;
-				mapBackContainer = tempMapHolder;
-
-				// other two sides stay the same
-				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z + 90.0f));
-				rotateHash.Add("z", 0.25f);
-				moveHash.Add("x", -4.5f);
-			}
-			else if (thisDirection == TransferDirection.Back)
-			{
-				GameObject tempMapHolder = mapTopContainer;
-				mapTopContainer = mapBackContainer;
-				mapBackContainer = mapBottomContainer;
-				mapBottomContainer = mapFrontContainer;
-				mapFrontContainer = tempMapHolder;
-				
-				// other two sides stay the same
-				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z - 90.0f));
-				rotateHash.Add("z", -0.25f);
-				moveHash.Add("x", 4.5f);
-			}
-			else if (thisDirection == TransferDirection.Left)
-			{
-				GameObject tempMapHolder = mapTopContainer;
-				mapTopContainer = mapLeftContainer;
-				mapLeftContainer = mapBottomContainer;
-				mapBottomContainer = mapRightContainer;
-				mapRightContainer = tempMapHolder;
-				
-				// other two sides stay the same
-				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x - 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
-				rotateHash.Add("x", -0.25f);
-				moveHash.Add("z", -4.5f);
-			}
-			else if (thisDirection == TransferDirection.Right)
-			{
-				GameObject tempMapHolder = mapTopContainer;
-				mapTopContainer = mapRightContainer;
-				mapRightContainer = mapBottomContainer;
-				mapBottomContainer = mapLeftContainer;
-				mapLeftContainer = tempMapHolder;
-				
-				// other two sides stay the same
-				//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x + 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
-				rotateHash.Add("x", 0.25f);
-				moveHash.Add("z", 4.5f);
-			}
-			else
-			{
-				Debug.LogError("Did not get a proper Direction for transfer!");
-			}
-
-			rotateHash.Add("time", 1.0f);
-			rotateHash.Add("isLocal", false);
-			//rotateHash.Add("easetype", "linear");
-			rotateHash.Add("oncomplete", "FinishedRotating");
-			rotateHash.Add("oncompletetarget", gameObject);
-
-			iTween.RotateBy(rotator, rotateHash);
-			playerObject.transform.position = new Vector3(playerObject.transform.position.x, playerObject.transform.position.y + 4.5f, playerObject.transform.position.z);
-			Invoke("MovePlayerOnTransfer", 0.0f);
-			currentMap = mapTopContainer.GetComponentInChildren<Map>();
+			// other two sides stay the same
+			//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z + 90.0f));
+			rotateHash.Add("z", 0.25f);
+			moveHash.Add("x", -4.5f);
 		}
+		else if (thisDirection == TransferDirection.Back)
+		{
+			GameObject tempMapHolder = mapTopContainer;
+			mapTopContainer = mapBackContainer;
+			mapBackContainer = mapBottomContainer;
+			mapBottomContainer = mapFrontContainer;
+			mapFrontContainer = tempMapHolder;
+			
+			// other two sides stay the same
+			//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x, masterCube.transform.rotation.y, masterCube.transform.rotation.z - 90.0f));
+			rotateHash.Add("z", -0.25f);
+			moveHash.Add("x", 4.5f);
+		}
+		else if (thisDirection == TransferDirection.Left)
+		{
+			GameObject tempMapHolder = mapTopContainer;
+			mapTopContainer = mapLeftContainer;
+			mapLeftContainer = mapBottomContainer;
+			mapBottomContainer = mapRightContainer;
+			mapRightContainer = tempMapHolder;
+			
+			// other two sides stay the same
+			//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x - 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
+			rotateHash.Add("x", -0.25f);
+			moveHash.Add("z", -4.5f);
+		}
+		else if (thisDirection == TransferDirection.Right)
+		{
+			GameObject tempMapHolder = mapTopContainer;
+			mapTopContainer = mapRightContainer;
+			mapRightContainer = mapBottomContainer;
+			mapBottomContainer = mapLeftContainer;
+			mapLeftContainer = tempMapHolder;
+			
+			// other two sides stay the same
+			//rotateHash.Add("rotation", new Vector3(masterCube.transform.rotation.x + 90.0f, masterCube.transform.rotation.y, masterCube.transform.rotation.z));
+			rotateHash.Add("x", 0.25f);
+			moveHash.Add("z", 4.5f);
+		}
+		else
+		{
+			Debug.LogError("Did not get a proper Direction for transfer!");
+		}
+
+		rotateHash.Add("time", 0.5f);
+		rotateHash.Add("isLocal", false);
+		//rotateHash.Add("easetype", "linear");
+		rotateHash.Add("oncomplete", "FinishedRotating");
+		rotateHash.Add("oncompletetarget", gameObject);
+
+		iTween.RotateBy(rotator, rotateHash);
+		playerObject.transform.position = new Vector3(playerObject.transform.position.x, playerObject.transform.position.y + 4.5f, playerObject.transform.position.z);
+		Invoke("MovePlayerOnTransfer", 0.0f);
+		currentMap = mapTopContainer.GetComponentInChildren<Map>();
 	}
 
 	public void MovePlayerOnTransfer()
 	{
 		moveHash.Add("y", 6.0f);
-		moveHash.Add("time", 1.1f);
+		moveHash.Add("time", 0.6f);
 		moveHash.Add("oncomplete", "FinishedPlacingPlayer");
 		moveHash.Add("oncompletetarget", gameObject);
 		iTween.MoveTo(playerObject, moveHash);
@@ -236,7 +233,10 @@ public class GameManager : MonoBehaviour {
 		currentMap.DeactivateMap(0.0f);
 		gameIsResetting = true;
 		levelNumber = 1;
-		//Debug.Log("GAME IS RESETTING IS TRUE, STOP PROCESSING TILE STUFF");
+
+		// Disable player movement animation
+		playerObject.GetComponentInChildren<Animator>().StopPlayback();
+		playerObject.GetComponent<PlayerMovement>().myAnimator.SetBool("playerShouldMove", false);
 
 		// Will need to reset variables that are adding onto themselves in the maps
 		mapTopContainer.GetComponentInChildren<Map>().ResetVariables();
@@ -252,6 +252,11 @@ public class GameManager : MonoBehaviour {
 	public void NextLevel()
 	{
 		Debug.Log("BEAT LEVEL");
+
+		// Disable player movement animation
+		playerObject.GetComponentInChildren<Animator>().StopPlayback();
+		playerObject.GetComponent<PlayerMovement>().myAnimator.SetBool("playerShouldMove", false);
+
 		currentMap.DeactivateMap(0.0f);
 		gameIsResetting = true;
 		levelNumber++;
@@ -334,7 +339,7 @@ public class GameManager : MonoBehaviour {
 		UIManager.Instance.LoadLevelNumber();
 		gameIsResetting = false;
 		UIManager.Instance.HUDScript.ResetScore();
-		Debug.Log("GAME IS RESETTING IS FALSE, BACK TO WORK");
+		//Debug.Log("GAME IS RESETTING IS FALSE, BACK TO WORK");
 		SetupMap();
 	}
 }

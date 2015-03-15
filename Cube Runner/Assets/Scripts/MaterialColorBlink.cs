@@ -10,7 +10,6 @@ public class MaterialColorBlink : MonoBehaviour {
 	public float alpha = 1.0f;
 
 	private MeshRenderer thisMeshRenderer;
-	private List<Material> allMaterials = new List<Material>();
 
 	// Use this for initialization
 	void Start ()

@@ -102,8 +102,6 @@ public class Map : MonoBehaviour {
 
 	public void GeneratePickups(int numOfPickupsToGenerate)
 	{
-		List<int> numsAlreadyChosen = new List<int>();
-
 		for (int i = 0; i < GameManager.Instance.pickupsPerSide; i++)
 		{
 			// Pick random placement for this pickup
@@ -173,141 +171,21 @@ public class Map : MonoBehaviour {
 			//Debug.Log("Setting up new tile group list...");
 			List<GameObject> tileGroup = new List<GameObject>();
 
-			thisPattern = CubePattern.FourSquare;
-			// Grab all the cubes connected in the pattern
 			if (thisPattern == CubePattern.Single)
 			{
 				//===============================||
 				// SINGLE CUBE
 				//===============================||
-
+				
 				// Add to the group that will get transformed
 				tileGroup.Add(randomStartTile);
 				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN SINGLE LOGIC");
 				tilesToCheck = 1;
-
-				// Start to blink this tile
-				randomStartTile.GetComponentInChildren<Animation>().Play("tileColorBlink");
-
-				// Then remove it from the list so it can't get chosen again in the meantime
-				transformableTiles.Remove(randomStartTile);
-
+				
 				//Debug.Log("transformed a SINGLE tile");
 			}
-			else if (thisPattern == CubePattern.Double)
+			else
 			{
-				//===============================||
-				// DOUBLE CUBES
-				//===============================||
-
-				// Add to transforming tile group
-				tileGroup.Add(randomStartTile);
-				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
-				tilesToCheck = 1;
-
-				// Find the other tile in this configuration
-				// Choose Up/Down or Left/Right to check first
-				bool checkUpDown;
-				if (Random.value >= 0.5f)
-					checkUpDown = true;
-				else
-					checkUpDown = false;
-
-				// Check the direction for another cube
-				if (checkUpDown)
-				{
-					if (CheckUpDownAndGiveMeCube(randomStartTile) != null)
-					{
-						tileGroup.Add(CheckUpForValidCube(randomStartTile));
-						//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
-						tilesToCheck++;
-					}
-					else
-					{
-						Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one...");
-					}
-				}
-				else // Check Left/Right for another cube
-				{
-					//Debug.Log("Trying to add Left/Right");
-					// See if there's one to the left/right of this cube that isn't transformed at the moment
-					if (CheckLeftRightAndGiveMeCube(randomStartTile) != null && CheckLeftRightAndGiveMeCube(randomStartTile) != randomStartTile)
-					{
-						tileGroup.Add(CheckLeftRightAndGiveMeCube(randomStartTile));
-						//Debug.Log("Adding Second Tile(" + CheckLeftRightFirst(randomStartTile).transform.localPosition.x + "," + CheckLeftRightFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
-						tilesToCheck++;
-					}
-					else
-					{
-						//Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one... ");
-					}
-				}
-
-				//Debug.Log("transformed a DOUBLE tile");
-			}
-			else if (thisPattern == CubePattern.Triple)
-			{
-				//===============================||
-				// TRIPLE CUBES
-				//===============================||
-				
-				// Add to transforming tile group
-				tileGroup.Add(randomStartTile);
-				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
-				tilesToCheck = 1;
-				
-				// Find the other tile in this configuration
-				// Choose Up/Down or Left/Right to check first
-				bool checkUpDown;
-				if (Random.value >= 0.5f)
-					checkUpDown = true;
-				else
-					checkUpDown = false;
-
-				// Check the direction for another cube
-				if (checkUpDown)
-				{
-					for (int i = 0; i < (int)thisPattern; i++)
-					{
-						if (tileGroup[i] != null && CheckUpDownAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckUpDownAndGiveMeCube(tileGroup[i])))
-						{
-							tileGroup.Add(CheckUpForValidCube(tileGroup[i]));
-							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT intial tile. IN DOUBLE LOGIC");
-							tilesToCheck++;
-						}
-						else
-						{
-							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
-							break;
-						}
-					}
-				}
-				else // Check Left/Right for another cube
-				{
-					for (int i = 0; i < (int)thisPattern; i++)
-					{
-						if (tileGroup[i] != null && CheckLeftRightAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckLeftRightAndGiveMeCube(tileGroup[i])))
-						{
-							tileGroup.Add(CheckLeftRightAndGiveMeCube(tileGroup[i]));
-							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT initial tile. IN DOUBLE LOGIC");
-							tilesToCheck++;
-						}
-						else
-						{
-							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
-							break;
-						}
-					}
-				}
-
-				//Debug.Log("transformed a TRIPLE tile");
-			}
-			else if (thisPattern == CubePattern.FourSquare)
-			{
-				//===============================||
-				// FOURSQUARE CUBES
-				//===============================||
-
 				// Add to transforming tile group
 				tileGroup.Add(randomStartTile);
 				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN FOURSQUARE LOGIC");
@@ -320,7 +198,7 @@ public class Map : MonoBehaviour {
 					checkUpDown = true;
 				else
 					checkUpDown = false;
-
+				
 				for (int i = 0; i < (int)thisPattern; i++)
 				{
 					checkUpDown = !checkUpDown;
@@ -354,13 +232,190 @@ public class Map : MonoBehaviour {
 						}
 					}
 				}
+			}
 
-				//Debug.Log("transformed a FourSquare tile");
-			}
-			else
-			{
-				// Wrong pattern?
-			}
+
+//			// Grab all the cubes connected in the pattern
+//			if (thisPattern == CubePattern.Single)
+//			{
+//				//===============================||
+//				// SINGLE CUBE
+//				//===============================||
+//
+//				// Add to the group that will get transformed
+//				tileGroup.Add(randomStartTile);
+//				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN SINGLE LOGIC");
+//				tilesToCheck = 1;
+//
+//				//Debug.Log("transformed a SINGLE tile");
+//			}
+//			else if (thisPattern == CubePattern.Double)
+//			{
+//				//===============================||
+//				// DOUBLE CUBES
+//				//===============================||
+//
+//				// Add to transforming tile group
+//				tileGroup.Add(randomStartTile);
+//				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
+//				tilesToCheck = 1;
+//
+//				// Find the other tile in this configuration
+//				// Choose Up/Down or Left/Right to check first
+//				bool checkUpDown;
+//				if (Random.value >= 0.5f)
+//					checkUpDown = true;
+//				else
+//					checkUpDown = false;
+//
+//				// Check the direction for another cube
+//				if (checkUpDown)
+//				{
+//					if (CheckUpDownAndGiveMeCube(randomStartTile) != null)
+//					{
+//						tileGroup.Add(CheckUpForValidCube(randomStartTile));
+//						//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
+//						tilesToCheck++;
+//					}
+//					else
+//					{
+//						Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one...");
+//					}
+//				}
+//				else // Check Left/Right for another cube
+//				{
+//					//Debug.Log("Trying to add Left/Right");
+//					// See if there's one to the left/right of this cube that isn't transformed at the moment
+//					if (CheckLeftRightAndGiveMeCube(randomStartTile) != null && CheckLeftRightAndGiveMeCube(randomStartTile) != randomStartTile)
+//					{
+//						tileGroup.Add(CheckLeftRightAndGiveMeCube(randomStartTile));
+//						//Debug.Log("Adding Second Tile(" + CheckLeftRightFirst(randomStartTile).transform.localPosition.x + "," + CheckLeftRightFirst(randomStartTile).transform.localPosition.z + ") to the group. Should be initial random tile. IN DOUBLE LOGIC");
+//						tilesToCheck++;
+//					}
+//					else
+//					{
+//						//Debug.Log("Second Tile was not added in DOUBLE logic because we couldn't find one... ");
+//					}
+//				}
+//
+//				//Debug.Log("transformed a DOUBLE tile");
+//			}
+//			else if (thisPattern == CubePattern.Triple)
+//			{
+//				//===============================||
+//				// TRIPLE CUBES
+//				//===============================||
+//				
+//				// Add to transforming tile group
+//				tileGroup.Add(randomStartTile);
+//				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN TRIPLE LOGIC");
+//				tilesToCheck = 1;
+//				
+//				// Find the other tile in this configuration
+//				// Choose Up/Down or Left/Right to check first
+//				bool checkUpDown;
+//				if (Random.value >= 0.5f)
+//					checkUpDown = true;
+//				else
+//					checkUpDown = false;
+//
+//				// Check the direction for another cube
+//				if (checkUpDown)
+//				{
+//					for (int i = 0; i < (int)thisPattern; i++)
+//					{
+//						if (tileGroup[i] != null && CheckUpDownAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckUpDownAndGiveMeCube(tileGroup[i])))
+//						{
+//							tileGroup.Add(CheckUpForValidCube(tileGroup[i]));
+//							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT intial tile. IN DOUBLE LOGIC");
+//							tilesToCheck++;
+//						}
+//						else
+//						{
+//							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
+//							break;
+//						}
+//					}
+//				}
+//				else // Check Left/Right for another cube
+//				{
+//					for (int i = 0; i < (int)thisPattern; i++)
+//					{
+//						if (tileGroup[i] != null && CheckLeftRightAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckLeftRightAndGiveMeCube(tileGroup[i])))
+//						{
+//							tileGroup.Add(CheckLeftRightAndGiveMeCube(tileGroup[i]));
+//							//Debug.Log("Adding Second Tile(" + CheckUpDownFirst(randomStartTile).transform.localPosition.x + "," + CheckUpDownFirst(randomStartTile).transform.localPosition.z + ") to the group. NOT initial tile. IN DOUBLE LOGIC");
+//							tilesToCheck++;
+//						}
+//						else
+//						{
+//							//Debug.Log(i + " Tile was not added in TRIPLE logic because we couldn't find one...");
+//							break;
+//						}
+//					}
+//				}
+//
+//				//Debug.Log("transformed a TRIPLE tile");
+//			}
+//			else if (thisPattern == CubePattern.FourSquare)
+//			{
+//				//===============================||
+//				// FOURSQUARE CUBES
+//				//===============================||
+//
+//				// Add to transforming tile group
+//				tileGroup.Add(randomStartTile);
+//				//Debug.Log("Adding Tile(" + randomStartTile.transform.localPosition.x + "," + randomStartTile.transform.localPosition.z + ") to the group. Should be initial random tile. IN FOURSQUARE LOGIC");
+//				tilesToCheck = 1;
+//				
+//				// Find the other tile in this configuration
+//				// Choose Up/Down or Left/Right to check first
+//				bool checkUpDown;
+//				if (Random.value >= 0.5f)
+//					checkUpDown = true;
+//				else
+//					checkUpDown = false;
+//
+//				for (int i = 0; i < (int)thisPattern; i++)
+//				{
+//					checkUpDown = !checkUpDown;
+//					// Check the direction for the next cube
+//					if (checkUpDown)
+//					{
+//						if (tileGroup[i] != null && CheckUpDownAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckUpDownAndGiveMeCube(tileGroup[i])))
+//						{
+//							tileGroup.Add(CheckUpDownAndGiveMeCube(tileGroup[i]));
+//							//Debug.Log("Adding " + i + " Tile(" + CheckUpDownAndGiveMeCube(tileGroup[i]).transform.localPosition.x + "," + CheckUpDownAndGiveMeCube(tileGroup[i]).transform.localPosition.z + ") to the group. NOT initial tile. IN FOURSQUARE LOGIC");
+//							tilesToCheck++;
+//						}
+//						else
+//						{
+//							//Debug.Log(i + " Tile was not added in FOURSQUARE logic because we couldn't find one... UPDOWN LOGIC");
+//							break;
+//						}
+//					}
+//					else // Check Left/Right for another cube
+//					{
+//						if (tileGroup[i] != null && CheckLeftRightAndGiveMeCube(tileGroup[i]) != null && !tileGroup.Contains(CheckLeftRightAndGiveMeCube(tileGroup[i])))
+//						{
+//							tileGroup.Add(CheckLeftRightAndGiveMeCube(tileGroup[i]));
+//							//Debug.Log("Adding " + i + " Tile(" + CheckLeftRightAndGiveMeCube(tileGroup[i]).transform.localPosition.x + "," + CheckLeftRightAndGiveMeCube(tileGroup[i]).transform.localPosition.z + ") to the group. NOT initial tile. IN FOURSQUARE LOGIC");
+//							tilesToCheck++;
+//						}
+//						else
+//						{
+//							//Debug.Log(i + " Tile was not added in FOURSQUARE logic because we couldn't find one... LEFTRIGHT LOGIC");
+//							break;
+//						}
+//					}
+//				}
+//
+//				//Debug.Log("transformed a FourSquare tile");
+//			}
+//			else
+//			{
+//				// Wrong pattern?
+//			}
 
 			// Run operations on all tiles in the group now
 			//Debug.Log("Number of tiles in tile group that should play the blink anim is: " + tileGroup.Count);

@@ -3,8 +3,6 @@ using System.Collections;
 
 public class Rotator : MonoBehaviour {
 
-	private Hashtable rotateHash = new Hashtable();
-
 	public float rotateXSpeed = 1.0f;
 	public float rotateYSpeed = 1.0f;
 	public float rotateZSpeed = 1.0f;

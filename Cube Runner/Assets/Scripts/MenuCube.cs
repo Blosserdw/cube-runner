@@ -17,7 +17,7 @@ public class MenuCube : MonoBehaviour {
 
 	public void ChangeMenu()
 	{
-		Debug.Log("ANIMATION EVENT HIT");
+		//Debug.Log("ANIMATION EVENT HIT");
 		UIManager.Instance.SwitchMenu();
 	}
 }

@@ -17,27 +17,27 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - time: 0
-        value: {x: -4.35091448, y: 1, z: 1.4034878}
+        value: {x: -4.35091448, y: -7.5, z: 1.4034878}
         inSlope: {x: 0, y: 0, z: -32.1739502}
         outSlope: {x: 0, y: 0, z: -32.1739502}
         tangentMode: 0
       - time: .25
-        value: {x: .150000006, y: 1, z: -6.63999987}
+        value: {x: .150000006, y: -7.5, z: -6.63999987}
         inSlope: {x: 60.691864, y: 0, z: -5.16697502}
         outSlope: {x: 60.691864, y: 0, z: -5.16697502}
         tangentMode: 0
       - time: .5
-        value: {x: 8.78999996, y: 1, z: -1.17999995}
+        value: {x: 8.78999996, y: -7.5, z: -1.17999995}
         inSlope: {x: 4.95396948, y: 0, z: 26.7999992}
         outSlope: {x: 4.95396948, y: 0, z: 26.7999992}
         tangentMode: 0
       - time: .75
-        value: {x: 3.1099999, y: 1, z: 6.76000023}
+        value: {x: 3.1099999, y: -7.5, z: 6.76000023}
         inSlope: {x: -26.2818298, y: 0, z: 5.16697502}
         outSlope: {x: -26.2818298, y: 0, z: 5.16697502}
         tangentMode: 0
       - time: 1
-        value: {x: -4.35091448, y: 1, z: 1.4034878}
+        value: {x: -4.35091448, y: -7.5, z: 1.4034878}
         inSlope: {x: 0, y: 0, z: -21.4260502}
         outSlope: {x: 0, y: 0, z: -21.4260502}
         tangentMode: 0
@@ -111,27 +111,27 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - time: 0
-        value: 1
+        value: -7.5
         inSlope: 0
         outSlope: 0
         tangentMode: 10
       - time: .25
-        value: 1
+        value: -7.5
         inSlope: 0
         outSlope: 0
         tangentMode: 10
       - time: .5
-        value: 1
+        value: -7.5
         inSlope: 0
         outSlope: 0
         tangentMode: 10
       - time: .75
-        value: 1
+        value: -7.5
         inSlope: 0
         outSlope: 0
         tangentMode: 10
       - time: 1
-        value: 1
+        value: -7.5
         inSlope: 0
         outSlope: 0
         tangentMode: 10

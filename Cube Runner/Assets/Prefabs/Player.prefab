@@ -300,7 +300,7 @@ Camera:
   m_GameObject: {fileID: 124672}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
+  m_ClearFlags: 3
   m_BackGroundColor: {r: .192156866, g: .301960796, b: .474509805, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
@@ -313,10 +313,10 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 7
-  m_Depth: -1
+  m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4294966271
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -415,10 +415,12 @@ MonoBehaviour:
   speed: 8
   direction: {x: 0, y: 0, z: 0}
   mySphereCollider: {fileID: 13594612}
+  myAnimator: {fileID: 0}
   playerArtObject: {fileID: 107070}
   stopMovement: 1
   isTransferring: 0
   transferThisDirection: 0
+  sinkPlayer: 0
 --- !u!124 &12410998
 Behaviour:
   m_ObjectHideFlags: 1
@@ -460,7 +462,7 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 410e88644688db04bba90fca86622d1d, type: 2}
+  - {fileID: 2100000, guid: bbf331d7a625a164a88eb3050d497284, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1

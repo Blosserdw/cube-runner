@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	private Rigidbody mRigidBody = null;
 	public SphereCollider mySphereCollider = null;
+	public Animator myAnimator = null;
 	public GameObject playerArtObject = null;
 
 	public bool stopMovement = false;
@@ -37,6 +38,9 @@ public class PlayerMovement : MonoBehaviour {
 
 		// Initialize the direction going up
 		direction = new Vector3(speed, mRigidBody.velocity.y, 0f);
+
+		myAnimator = gameObject.GetComponentInChildren<Animator>();
+		myAnimator.SetBool("playerShouldMove", true);
 	}
 	
 	// Update is called once per frame
@@ -172,7 +176,7 @@ public class PlayerMovement : MonoBehaviour {
 
 	public void RestartPlayer(TransferDirection thisDirection)
 	{
-		Debug.Log("RESTARTING PLAYER!!");
+		//Debug.Log("RESTARTING PLAYER!!");
 
 		if (thisDirection == TransferDirection.Front)
 		{
@@ -208,12 +212,12 @@ public class PlayerMovement : MonoBehaviour {
 			if (other.gameObject.transform.localPosition.y > 0.0f)
 			{
 				// This cube is raised
-				Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				//Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
 			}
 			else if (other.gameObject.transform.localPosition.y < 0.0f)
 			{
 				// This cube is sunken
-				Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				//Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
 				GameManager.Instance.SinkPlayer(true);
 			}
 		}
@@ -227,12 +231,12 @@ public class PlayerMovement : MonoBehaviour {
 			if (other.gameObject.transform.localPosition.y > 0.0f)
 			{
 				// This cube is raised
-				Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				//Debug.Log("Entered trigger of RAISED tile " + transform.localPosition.x + ", " + transform.localPosition.z);
 			}
 			else if (other.gameObject.transform.localPosition.y < 0.0f)
 			{
 				// This cube is sunken
-				Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
+				//Debug.Log("Entered trigger of SUNKEN tile " + transform.localPosition.x + ", " + transform.localPosition.z);
 				GameManager.Instance.SinkPlayer(false);
 			}
 		}
